@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+.container {
+  width: 600px;
+  margin: 30px auto 0;
+}
+.todo-title {
+  margin-bottom: 30px;
+  font-size: 28px;
+}
+.todo-list {
+  margin-bottom: 10px;
+  padding: 20px;
+  border: 1px solid #dee2e6;
+}
+.todo-list p {
+  margin: 10px 0;
+}
+.todo-btn {
+  width: calc(80%-20px); /* 사칙연산 */
+  padding: 8px 15px;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+}
+.todo-btn:hover {
+  color: #fff;
+  cursor: pointer;
+  background-color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+}
