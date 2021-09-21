@@ -10,22 +10,29 @@
 <body>
     <div class="container">
         <h2 class="todo-title">오늘 할일</h2>
-        <div class="todo-list">
-            <h3>고양이 밥주기</h3>
-            <p>고양이 물, 사료 챙겨주기</p>
-            <button class="todo-btn">완료</button>
+        <div class="create-todo-wrap">
+            <input class="create-todo-title" type="text" placeholder="제목을 등록해주세요."/>
+            <input class="create-todo" type="text" placeholder="할일을 등록해주세요."/>
+            <button class="create-btn">등록</button>
         </div>
-        <div class="todo-list">
-            <h3>인강 듣기</h3>
-            <p>리액트 인강 미리 듣기</p>
-            <button class="todo-btn">완료</button>
-        </div>
-        <div class="todo-list">
-            <h3>PORT-us 기능 추가</h3>
-            <p>팀 번호 변경 및 전체 내용 삭제 기능 추가</p>
-            <button class="todo-btn">완료</button>
-        </div>
+        <div id="todo-list-wrap">
+            <div class="todo-list">
+                <h3>고양이 밥주기</h3>
+                <p>고양이 물, 사료 챙겨주기</p>
+                <button class="todo-btn">완료</button>
+            </div>
+            <div class="todo-list">
+                <h3>인강 듣기</h3>
+                <p>리액트 인강 미리 듣기</p>
+                <button class="todo-btn">완료</button>
+            </div>
+            <div class="todo-list">
+                <h3>PORT-us 기능 추가</h3>
+                <p>팀 번호 변경 및 전체 내용 삭제 기능 추가</p>
+                <button class="todo-btn">완료</button>
+            </div>
+        </div>       
     </div>    
-    <script src="script.js"></script>
+    <script src="homework.js"></script>
 </body>
 </html>

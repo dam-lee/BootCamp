@@ -1,5 +1,6 @@
 const todoList = document.getElementsByClassName("todo-list");
 const todoBtn = document.getElementsByClassName("todo-btn");
+
 console.log(aa);
 // 함수 선언문 , 호이스팅 발생
 function aa() {
