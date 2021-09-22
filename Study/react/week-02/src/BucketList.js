@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 // 함수형 컴포넌트는 이렇게 쓸 수도 있고
 // function Bucketlist(props){
 // return (
@@ -14,22 +15,26 @@ const BucketList = ({ list }) => {
   // Quiz 1: my_list에 ['a', 'b', 'c'] 대신 부모 컴포넌트가 넘겨준 값을 넣으려면 어떻게 해야할까요?
   const my_lists = list;
   console.log("my_lists = ", my_lists);
+  const my_wrap = React.useRef(null);
+  // 파라미터로 들어오는 애는 객체인데 {list: 어떤값을 받아온것}
   // 컴포넌트가 뿌려줄 ui 요소(리엑트 엘리먼트라고 불러요.)를 반환해줍니다.
+
   return (
-    <div>
-      {
-        // js의 내장 함수 중 하나인 map입니다. 리스트의 갯수만큼 => 오른쪽 구문을 반복해요.
-        // 자세한 사용법은 아래 링크를 확인해주세요.
-        // https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/map
-        my_lists.map((list, index) => {
-          // 콘솔을 확인해봅시다 :)
-          //   console.log(list);
-          return <div key={index}>{list}</div>;
-        })
-      }
+    <div ref={my_wrap}>
+      {my_lists.map((list, index) => {
+        return (
+          <ItemList className="list-item" key={index}>
+            {list}
+          </ItemList>
+        );
+      })}
     </div>
   );
 };
-
+const ItemList = styled.div`
+  padding: 16px;
+  margin: 8px;
+  background-color: aliceblue;
+`;
 // export {BucketList}
 export default BucketList;

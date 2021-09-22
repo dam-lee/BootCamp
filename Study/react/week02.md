@@ -19,28 +19,26 @@
 - 반은 맞고, 반은 틀리다.
 - 사이트 구조에 따라 가상돔을 쓰는 것보다 훨씬 성능이 좋을 수 있고(빠를 수 있고), 느릴 수 있다.
 
----
-
 # 라이프 사이클이란?
 
-컴포넌트의 라이프 사이클은 크게 3가지로 구분 될 수 있다.
+## 컴포넌트의 라이프 사이클은 크게 3가지로 구분 될 수 있다.
 
 1. 생성 될 때 (Mount. 화면에 그려진다.)
 2. 업데이트 할 때 (update. 수정할때)
 3. 제거 할 때 (unMount 화면에서 사라질때)
 
-#### 생성 될 때 과정.
+### 생성 될 때 과정.
 
 constructor -> render -> componentDid-Mount.
 
-#### 수정될 때의 경우
+### 수정될 때의 경우
 
 - props가 바뀔 때
 - state가 바뀔 때
 - 부모 컴포넌트가 업데이트 되었을 때 (리렌더링 되었을 때)
 - 강제로 업데이트 했을 경우 (forceUpdate()를 통해 강제로 컴포넌트 업데이트를 할 수 있다.)
 
-#### 제거의 경우
+### 제거의 경우
 
 - 페이지 이동
 - 사용자의 행동(삭제 클릭 등)으로 인해 컴포넌트가 화면에서 사라지는 경우
@@ -181,3 +179,103 @@ export default LifecycleEx;
 - **props로 받은 데이터는 수정할 수 없다.** 부모의 값이기 때문에 자식이 변경 불가.
 
 # 버킷리스트
+
+컨트롤 c로 서버를 꺼놨어도 리액트가 보이는 이유
+서버와 클라이언트는 요청과 응답으로 이루어져 있다.
+서버를 꺼놨는데 리액트가 돌아가는 이유는 서버가 클라이언트에 html css js 파일을 이미 보내줬기 때문에 보여주는 것이다.
+클라이언트가 새로고침을 한다거나, 무언가를 요청할때는 연결할 수 없다고 나온다.
+
+마진병합상세
+자식요소의 마진이 부모영역으로 넘어간 상태를 말함.
+display: flex; 으로 변경
+
+## styled-components
+
+styled-components는 프로젝트 안에서 설치해줘야 한다.
+package.json의 dependencies는 프로젝트에서 쓰이는 모든 패키지들을 기록해준다.
+
+#### 장점
+
+- class 이름 짓기에서 해방된다.
+- 컴포넌트에 스타일을 적기 때문에, 간단하고 직관적이다.
+- css-in-js 라이브러리 중 하나.
+- props를 줘서 사용할 수 있다.
+
+```javascript
+<MyStyled bg_color={"black"} />;
+const MyStyled = styled.div`
+  width: 50vw;
+  height: 150px;
+  background-color: ${(props) => (props.bg_color ? "red" : "blue")};
+  p {
+    color: #fff;
+  }
+  &:hover {
+    background-color: yellow;
+  }
+`;
+```
+
+scss 문법
+중괄호 안에다가 중괄호 또 쓰는 기법을 레스팅 기법이라 한다.
+
+## Ref
+
+리액트에서 돔요소를 가져올때 사용한다.
+이름표 같은 거라고 생각할 수 있다. ref.current
+
+#### 클래스형 컴포넌트 Ref
+
+<code>this.text = React.createRef();</code>
+
+#### 함수형 컴포넌트 Ref
+
+<code>React.useRef()</code>
+
+# State
+
+리액트는 단방향 데이터 흐름이다. (데이터가 위에서 아래로, 부모에서 자식으로 넘겨준다)
+
+#### 단방향으로 쓰는 이유
+
+라이프 사이클과 엮어서 생각해보면, 데이터는 위에서 아래로 넘겨주는데 , 라이프 사이클에서 생성될때까지는 상관이 없지만, 업데이트 되었을때 부모의 state가 있고, 이 값을 자식한테 그대로 넘겨줘야 할 경우
+부모 데이터 state
+자식은 부모 데이터 props로 받아옴
+자식이 리렌더링 되면 여기서 작업은 끝이난다.
+자식이 부모한테 데이터를 줘야 하는 경우
+줘야하는 데이터가 props나, state처럼 무언가에 영향을 줘야 할 경우
+자식이 부모한테 영향이 가기 때문에, 자식이 부모의 렌더링을 일으킨다.
+부모가 재렌더링이 되었기 때문에 자식도 같이 재렌더링이 된다.
+이런식으로 무한루프에 빠지게 된다.
+이런 이유 때문에 양방향보다 단방향으로 쓰는 것이 좋다.
+
+React.useState(3); // 리액트 훅을 써서 State를 만듬.
+const [count, setCount] = React.useState(3);
+count는 현재값 setCount는 변경할때사용
+
+## ... 스프레드 문법
+
+```javascript
+// [...this.state.list, 넣고 싶었던 어떤 값]
+list: [...this.state.list, this.text.current.value];
+
+createTodo = () => {
+  const new_item = this.text.current.value;
+  this.setState({
+    list: [...this.state.list, new_item],
+  });
+  this.text.current.value = "";
+};
+```
+
+# 정리
+
+- 컴포넌트의 라이프 사이클은 크게 나누면 3가지 (생성,수정,삭제)
+- 리렌더링 되는 경우
+
+1. 부모컴포넌트가 리렌더링되면 자식도 같이 리렌더링 됨.
+2. 컴포넌트 자체의 state나 받아온 props가 변했을때)
+3. 강제 업데이트 되는 경우 (최대한 안하는게 좋아서 안알려줌)
+
+- DOM에 직접 접근하는 방법 Ref
+-
