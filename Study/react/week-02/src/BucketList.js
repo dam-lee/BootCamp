@@ -1,34 +1,35 @@
 import React from "react";
 import styled from "styled-components";
-// 함수형 컴포넌트는 이렇게 쓸 수도 있고
-// function Bucketlist(props){
-// return (
-// <div>버킷 리스트</div>
-// );
-// }
+import { useHistory } from "react-router-dom";
+// 리덕스에 있는 데이터를 가져올 때 쓰는 훅은 useSelector
+import { useSelector } from "react-redux";
 
-// 이렇게 쓸 수도 있어요. =>가 들어간 함수를 화살표 함수라고 불러요.
-// 저희는 앞으로 화살표 함수를 사용할거예요.
-// 앗 () 안에 props! 부모 컴포넌트에게 받아온 데이터입니다.
-// js 함수가 값을 받아오는 것과 똑같이 받아오네요.
-const BucketList = ({ list }) => {
-  // Quiz 1: my_list에 ['a', 'b', 'c'] 대신 부모 컴포넌트가 넘겨준 값을 넣으려면 어떻게 해야할까요?
-  const my_lists = list;
-  console.log("my_lists = ", my_lists);
-  const my_wrap = React.useRef(null);
-  // 파라미터로 들어오는 애는 객체인데 {list: 어떤값을 받아온것}
-  // 컴포넌트가 뿌려줄 ui 요소(리엑트 엘리먼트라고 불러요.)를 반환해줍니다.
+const BucketList = (props) => {
+  const history = useHistory();
+  // 화살표 함수가 받는 인자인 (state)는 스토어가 갖고 있는 전체 데이터를 말하고
+  // => state는 스토어가 갖고 있는 모든 데이터 보려고 함
+  const my_lists = useSelector((state) => state.bucket.list);
+  // console.log에 나온 bucket은 모듈명이다 bucket:bucket
+  const onClick = (index) => {
+    return history.push(`/detail/${index}`);
+  };
 
   return (
-    <div ref={my_wrap}>
-      {my_lists.map((list, index) => {
-        return (
-          <ItemList className="list-item" key={index}>
-            {list}
-          </ItemList>
-        );
-      })}
-    </div>
+    <>
+      <div>
+        {my_lists.map((list, index) => {
+          return (
+            <ItemList
+              className="list-item"
+              key={index}
+              onClick={() => onClick(index)}
+            >
+              {list}
+            </ItemList>
+          );
+        })}
+      </div>
+    </>
   );
 };
 const ItemList = styled.div`

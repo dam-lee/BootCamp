@@ -1,72 +1,51 @@
 import React from "react"; // 클래스형 컴포넌트로 할때 불러와야함.
 import BucketList from "./BucketList";
 import styled from "styled-components";
-// import "./style.css";
-// import {BucketList} from "./BucketList"
-// function App() {
-//   return (
-//     <>
-//       <h1>버킷 리스트</h1>
-//       <BucketList />
-//     </>
-//   );
-// }
+import { Route, Switch } from "react-router-dom";
+import Detail from "./Detail.js";
+import NotFound from "./NotFound";
+// 스토어에 있는 state를 수정하기 위해 dispatch로 수정할거야! 라고 선언.
+import { useDispatch } from "react-redux";
+// 액션 생성함수를 불러온다
+import { createBucket } from "./redux/modules/bucket";
 
-// 클래스형 컴포넌트
-class App extends React.Component {
-  constructor(props) {
-    super(props); // super는 부모 클래스의 데이터들 사용
-    this.state = {
-      list: ["항해99 끝내기", "취업하기", "여행가기", "잠자기"],
-    };
-    this.text = React.createRef();
-  }
+function App() {
+  const text = React.useRef(null);
+  // useDispatch()함수에서 리턴하는 어떤 객체가 dispatch에 들어간다.
+  const dispatch = useDispatch();
 
-  componentDidMount() {
-    console.log("componentDidMount");
-  }
-  // 내가 푼 퀴즈 (todo한개 더 추가하기)
-  // createTodo = () => {
-  //   this.setState({
-  //     ...this.state,
-  //     list: this.state.list.concat(this.state.text),
-  //     text: "",
-  //   });
-  //   this.text.current.value = "";
-  //   console.log(this.state);
-  // };
-  createTodo = () => {
-    console.log(this.text.current.value);
-    const new_item = this.text.current.value;
-    this.setState({
-      list: [...this.state.list, new_item],
-      // list: [...this.state.list].concat(this.text.current.value),
-    });
-    this.text.current.value = "";
+  const createTodo = () => {
+    const newTodo = text.current.value;
+    // 액션을 일으킨다.
+    dispatch(createBucket(newTodo));
+    text.current.value = "";
   };
-  // 스프레드 문법
-  // [...this.state.list, 넣고 싶었던 어떤 값]
-  //  list: [...this.state.list, this.text.current.value]
-
-  render = () => {
-    return (
+  return (
+    <>
       <Wrap>
         <Container>
-          <Title>내 버킷리스트</Title>
+          <Title>버킷 리스트</Title>
           <Line />
-          <BucketList list={this.state.list} />
+          <Switch>
+            <Route path={"/"} exact>
+              <BucketList />
+            </Route>
+            <Route path={"/detail/:index"}>
+              <Detail />
+            </Route>
+            <Route>
+              <NotFound />
+            </Route>
+          </Switch>
         </Container>
+
         <CreateWrap>
-          <Input
-            type="text"
-            ref={this.text}
-            placeholder="할일을 입력해주세요."
-          />
-          <Button onClick={this.createTodo}>등록</Button>
+          <Input type="text" ref={text} placeholder="할일을 입력해주세요." />
+          <Button onClick={createTodo}>등록</Button>
         </CreateWrap>
       </Wrap>
-    );
-  };
+    </>
+  );
 }
 
 const Wrap = styled.div`
