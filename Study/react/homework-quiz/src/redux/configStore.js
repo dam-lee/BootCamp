@@ -1,7 +1,7 @@
 import { createStore, combineReducers } from "redux";
 import quiz from "./modules/quiz";
-
-const rootReducer = combineReducers({ quiz });
+import user from "./modules/user";
+const rootReducer = combineReducers({ quiz, user });
 
 const store = createStore(rootReducer);
 

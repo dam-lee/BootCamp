@@ -1,40 +1,30 @@
 // 1. 액션 타입 정의
-const USERNAME = "quiz/USERNAME";
-const QUIZANSWER = "quiz/QUIZANSWER";
+
+const ADDQUIZ = "quiz/ADDQUIZ";
 
 const initialState = {
-  user_name: "",
-  quiz_name: "아이유",
-  quiz_score: 0,
+  quiz_name: "루이",
+  quiz_score: [],
+  quiz_list: [
+    { question: "루이는 여자다", answer: false },
+    { question: "루이는 러시안 블루라는 종이다.", answer: true },
+    { question: "루이는 7살이다", answer: false },
+  ],
+  quiz_done: 0,
+  user_answer: [],
 };
 
-// 2. 액션 생성 함수
-export const createUserName = (user_name) => {
-  console.log("유저 이름 만드는 액션 생성 함수 = ", user_name);
-  return { type: USERNAME, user_name };
-};
-
-export const updateQuiz = (quiz_score) => {
-  return { type: QUIZANSWER, quiz_score };
+export const updateQuiz = (user_answer) => {
+  return { type: ADDQUIZ, user_answer };
 };
 
 // 3. 리듀서
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case USERNAME:
-      return {
-        user_name: action.user_name,
-        quiz_name: state.quiz_name,
-        quiz_score: state.quiz_score,
-      };
-    case QUIZANSWER:
-      console.log("리듀서 state", state);
-      console.log("리듀서 action", action);
-      return {
-        user_name: state.user_name,
-        quiz_name: state.quiz_name,
-        quiz_score: action.quiz_score,
-      };
+    case ADDQUIZ:
+      const newAnswer = [...state.user_answer, action.user_answer];
+      const newQuizDone = state.quiz_done + 1;
+      return { ...state, user_answer: newAnswer, quiz_done: newQuizDone };
     default:
       return state;
   }

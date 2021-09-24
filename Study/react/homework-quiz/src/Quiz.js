@@ -1,81 +1,59 @@
 import React from "react";
-import styled from "styled-components";
-import { useDispatch } from "react-redux";
+
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { updateQuiz } from "./redux/modules/quiz";
+import {
+  Container,
+  Wrap,
+  Title,
+  QuizText,
+  ImageWrap,
+  Image,
+  ButtonWrap,
+  Button,
+} from "./Style";
+import image from "./image/cat01.jpg";
+import Progress from "./Progress";
 
 const Quiz = (props) => {
-  const dispatch = useDispatch();
+  const quiz_list = useSelector((state) => state.quiz.quiz_list);
+  const user_answer_list = useSelector((state) => state.quiz.user_answer);
+
   const history = useHistory();
-  const onTrueClick = () => {
-    dispatch(updateQuiz(0));
-    history.push("/score");
+  const dispatch = useDispatch();
+
+  const setAnswer = (user_answer) => {
+    dispatch(updateQuiz(user_answer));
   };
-  const onFalseClick = () => {
-    dispatch(updateQuiz(100));
-    history.push("/score");
-  };
+
+  React.useEffect(() => {
+    if (user_answer_list.length === quiz_list.length) {
+      history.push("/score");
+      return;
+    }
+  }, [user_answer_list]);
+
+  if (user_answer_list.length === quiz_list.length) {
+    return null;
+  }
   return (
     <Container>
       <Wrap>
-        <Title>Quiz</Title>
+        <Progress />
+        <Title>Quiz {user_answer_list.length + 1}.</Title>
         <ImageWrap>
-          <Image
-            src="https://w.namu.la/s/40de86374ddd74756b31d4694a7434ee9398baa51fa5ae72d28f2eeeafdadf0c475c55c58e29a684920e0d6a42602b339f8aaf6d19764b04405a0f8bee7f598d2922db9475579419aac4635d0a71fdb8a4b2343cb550e6ed93e13c1a05cede75"
-            alt="아이유"
-          />
+          <Image src={image} alt="루이" />
         </ImageWrap>
-        <Text>아이유의 성별은 남자일까요?</Text>
+        <QuizText>{quiz_list[user_answer_list.length].question}</QuizText>
+
         <ButtonWrap>
-          <Button onClick={onTrueClick}>O</Button>
-          <Button onClick={onFalseClick}>X</Button>
+          <Button onClick={() => setAnswer(true)}>O</Button>
+          <Button onClick={() => setAnswer(false)}>X</Button>
         </ButtonWrap>
       </Wrap>
     </Container>
   );
 };
-const Container = styled.div`
-  display: flex;
-  height: 100vh;
-  flex-direction: column;
-  -webkit-align-items: center;
-  align-items: center;
-`;
-const Wrap = styled.div`
-  width: 60vh;
-  min-height: 70vh;
-  padding: 30px;
-  margin: auto;
-  text-align: center;
-  border-radius: 8px;
-  background-color: #f1f3f5;
-`;
-const Title = styled.h1`
-  margin: 0 0 10px;
-  color: #343a40;
-  line-height: 1.7;
-`;
-const ImageWrap = styled.div`
-  margin-bottom: 30px;
-`;
-const Image = styled.img`
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  object-fit: cover;
-`;
-const Text = styled.p`
-  font-weight: 600;
-`;
-const ButtonWrap = styled.div`
-  margin-top: 30px;
-`;
-const Button = styled.button`
-  padding: 15px 25px;
-  border: 1px solid #fff;
-  background-color: #fff;
-  &:last-child {
-    margin-left: 20px;
-  }
-`;
+
 export default Quiz;

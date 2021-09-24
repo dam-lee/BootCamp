@@ -1,78 +1,58 @@
 import React from "react";
-import styled from "styled-components";
-import { useSelector } from "react-redux";
+
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-
+import { createRanking } from "./redux/modules/user";
+import { Container, Wrap, Title, Name, Input, RankinButton } from "./Style";
+import { db } from "./firebase";
+import { collection, addDoc } from "firebase/firestore";
 const Score = () => {
-  const quiz = useSelector((state) => state.quiz);
-  const history = useHistory();
-  const userName = quiz.user_name;
-  const userScore = quiz.quiz_score;
+  const quiz_list = useSelector((state) => state.quiz.quiz_list);
+  const user_answer_list = useSelector((state) => state.quiz.user_answer);
+  const user_name = useSelector((state) => state.user.user_name);
+  const dispatch = useDispatch();
+  const user_text = React.useRef(null);
 
-  const onQuiz = () => {
-    history.goBack();
+  const history = useHistory();
+  const _score =
+    (100 / quiz_list.length) * // 맞춘거를 계산
+    quiz_list.filter((item, index) => {
+      return item.answer === user_answer_list[index];
+    }).length; // 맞춘 갯수
+  const score = Math.round(_score);
+
+  const onRanking = () => {
+    if (user_text.current.value === "") {
+      return window.alert("한마디 글을 남겨주세요");
+    }
+    const newRanking = {
+      name: user_name,
+      score,
+      message: user_text.current.value,
+    };
+    dispatch(createRanking(newRanking));
+    addDoc(collection(db, "quiz"), newRanking);
+    history.push("/ranking");
+    return;
   };
-  const onHome = () => {
-    history.push("/");
-  };
+
   return (
     <Container>
       <Wrap>
         <Title>
-          <Name>아이유</Name>퀴즈에 대한
+          <Name>루이</Name>퀴즈에 대한
           <br />
-          {userName}님의 점수는 <br />
-          {userScore}점!
+          {user_name}님의 점수는 <br /> {score}점!
         </Title>
-        <p>
-          {userScore === 100 ? "우와 축하드려요!" : "문제를 다시 풀어보세요!"}
-        </p>
-        <ButtonWrap>
-          <Button onClick={onQuiz}>문제 다시 풀기</Button>
-          <Button onClick={onHome}>홈 화면으로 이동!</Button>
-        </ButtonWrap>
+        <Input
+          ref={user_text}
+          type="text"
+          placeholder="한마디하고 랭킹 보러가기"
+        />
+        <RankinButton onClick={onRanking}>랭킹보러가기</RankinButton>
       </Wrap>
     </Container>
   );
 };
-const Container = styled.div`
-  display: flex;
-  height: 100vh;
-  flex-direction: column;
-  -webkit-align-items: center;
-  align-items: center;
-`;
-const Wrap = styled.div`
-  width: 60vh;
-  min-height: 70vh;
-  padding: 30px;
-  margin: auto;
-  text-align: center;
-  border-radius: 8px;
-  background-color: #f1f3f5;
-`;
-const Title = styled.h1`
-  margin: 0 0 10px;
-  color: #343a40;
-  line-height: 1.7;
-`;
-const Name = styled.span`
-  padding: 6px 14px;
-  border-radius: 30px;
-  color: #fff;
-  background-color: #495057;
-`;
-
-const ButtonWrap = styled.div`
-  margin-top: 30px;
-`;
-const Button = styled.button`
-  padding: 15px 25px;
-  border: 1px solid #fff;
-  background-color: #fff;
-  &:last-child {
-    margin-left: 20px;
-  }
-`;
 
 export default Score;
