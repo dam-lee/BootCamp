@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { createUserName } from "./redux/modules/user";
 import { useHistory } from "react-router";
 import { Container, Wrap, Title, Name, Input, StartButton } from "./Style";
@@ -9,19 +9,11 @@ const Start = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const name_ref = React.useRef(null);
-  const test = useSelector((state) => state.user.ranking);
 
   const onStart = () => {
     dispatch(createUserName(name_ref.current.value));
-    return history.push("/quiz");
+    history.push("/quiz");
   };
-
-  useEffect(() => {
-    if (test.length > 0) {
-      dispatch();
-    }
-    console.log("길이확인", test.length);
-  }, []);
 
   return (
     <Container>

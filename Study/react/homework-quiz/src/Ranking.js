@@ -13,33 +13,29 @@ import {
   HomeButton,
 } from "./Style";
 import { useHistory } from "react-router-dom";
-import { db } from "./firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { userRankingListFB } from "./redux/modules/user";
+import { useDispatch, useSelector } from "react-redux";
+import Spinner from "./Spinner";
 
 const Ranking = (props) => {
   const history = useHistory();
-  const [newData, setNewData] = React.useState([]);
+  const dispatch = useDispatch();
 
-  const newLoad = async () => {
-    const query = await getDocs(collection(db, "quiz"));
-    let data = [];
-    query.forEach((doc) => {
-      let newDoc = doc.data();
-      data.push(newDoc);
-    });
-    setNewData(data);
-  };
+  const ranking_list = useSelector((state) => state.user.ranking);
+  const is_loading = useSelector((state) => state.user.is_loading);
 
   React.useEffect(() => {
-    newLoad();
+    dispatch(userRankingListFB());
   }, []);
 
-  const sortRanking = newData.sort(function (a, b) {
+  const sortRanking = ranking_list.sort(function (a, b) {
     return b.score - a.score;
   });
 
   return (
     <Container>
+      {!is_loading && <Spinner />}
+
       <Wrap>
         <Title>랭킹.</Title>
         <RankingWrap>

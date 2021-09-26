@@ -2,7 +2,7 @@ import React from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { updateQuiz } from "./redux/modules/quiz";
+import { userAnswerQuizList, loadQuizList } from "./redux/modules/quiz";
 import {
   Container,
   Wrap,
@@ -24,13 +24,16 @@ const Quiz = (props) => {
   const dispatch = useDispatch();
 
   const setAnswer = (user_answer) => {
-    dispatch(updateQuiz(user_answer));
+    dispatch(userAnswerQuizList(user_answer));
   };
 
   React.useEffect(() => {
-    if (user_answer_list.length === quiz_list.length) {
-      history.push("/score");
-      return;
+    dispatch(loadQuizList());
+    if (quiz_list.length !== 0) {
+      if (user_answer_list.length === quiz_list.length) {
+        history.push("/score");
+        return;
+      }
     }
   }, [user_answer_list]);
 

@@ -3,7 +3,9 @@ import { useParams, useHistory } from "react-router-dom";
 
 // 리덕스에서 버킷리스트 데이터 가져오기
 import { useSelector, useDispatch } from "react-redux";
-import { removeBucket, deleteBucket } from "./redux/modules/bucket";
+import { updateBucketFB, deleteBucketFB } from "./redux/modules/bucket";
+
+import Button from "@material-ui/core/Button";
 
 const Detail = (props) => {
   const params = useParams();
@@ -12,42 +14,30 @@ const Detail = (props) => {
   const dispatch = useDispatch();
   const bucket_list = useSelector((state) => state.bucket.list);
 
-  // 내가 푼거
-  const removeBucketList = () => {
-    const newBucket = bucket_list.filter((item) => {
-      return item !== bucket_list[bucket_index];
-    });
-    dispatch(removeBucket(newBucket));
-    history.goBack();
-  };
-
   return (
     <>
-      <h1>{bucket_list[bucket_index]}</h1>
-      {/* <button
-        style={{
-          backgroundColor: "slateblue",
-          border: "1px solid slateblue",
-          color: "#fff",
-          padding: "10px 20px",
+      <h1>{bucket_list[bucket_index] ? bucket_list[bucket_index].text : ""}</h1>
+      <Button
+        variant="outlined"
+        onClick={() => {
+          // dispatch(updateBucket(bucket_index));
+          dispatch(updateBucketFB(bucket_list[bucket_index].id));
         }}
-        onClick={removeBucketList}
-      > */}
-      <button
-        style={{
-          backgroundColor: "slateblue",
-          border: "1px solid slateblue",
-          color: "#fff",
-          padding: "10px 20px",
-        }}
+      >
+        완료하기
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
         // 튜터님해설
         onClick={() => {
-          dispatch(deleteBucket(bucket_index));
+          // dispatch(deleteBucket(bucket_index));
+          dispatch(deleteBucketFB(bucket_list[bucket_index].id));
           history.goBack();
         }}
       >
         삭제
-      </button>
+      </Button>
     </>
   );
 };

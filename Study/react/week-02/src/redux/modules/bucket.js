@@ -9,44 +9,160 @@
 // const UPDATE = "my-app/widgets/UPDATE";
 // const REMOVE = "my-app/widgets/REMOVE";
 
+import { db } from "../../firebase";
+import {
+  collection,
+  doc,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+
 const CREATE = "bucket/CREATE";
 const REMOVE = "bucket/REMOVE";
+// 튜터님
 const DELETE = "bucket/DELETE";
+const UPDATE = "bucket/UPDATE";
+const LOAD = "bucket/LOAD";
+
+const ISLOADED = "bucket/ISLOADED";
 // 맨처음 초기값
 const initialState = {
-  list: ["항해99 끝내기", "취업하기", "여행가기", "redux"],
+  is_loaded: false,
+  list: [],
+  // list: ["항해99 끝내기", "취업하기", "여행가기", "redux"],
 };
 
-// Action Creators
+export function isLoaded(loaded) {
+  return { type: ISLOADED, loaded };
+}
+
+// 읽기
+export function loadBucket(bucket_list) {
+  return { type: LOAD, bucket_list };
+}
+// 등록
 export function createBucket(bucket) {
-  // console.log("액션을 실행할고양!");
   return { type: CREATE, bucket };
 }
-// 내가 한거
-export function removeBucket(bucket) {
-  console.log("삭제 액션을 실행할고양! = ", bucket);
-  return { type: REMOVE, bucket };
+// 업데이트 (할일 완료하기)
+export function updateBucket(bucket_index) {
+  return { type: UPDATE, bucket_index };
 }
-// 튜터님이 한거
+// 튜터님이 한거 삭제
 export function deleteBucket(bucket_index) {
-  console.log("지울 버킷 인덱스 === ", bucket_index);
   return { type: DELETE, bucket_index };
 }
+
+// 미들웨어 함수 만들기
+export const loadBucketFB = () => {
+  // 미들웨어는 함수를 리턴 (매개변수로 dispatch)
+  return async function (dispatch) {
+    const bucket_data = await getDocs(collection(db, "bucket"));
+
+    let bucket_list = [];
+    bucket_data.forEach((bucket) => {
+      // 이렇게 하거나
+      //  bucket_list = [...bucket_list, { ...bucket.data() }];
+      // 배열 내장함수로 하거나
+      bucket_list.push({ id: bucket.id, ...bucket.data() });
+    });
+
+    dispatch(loadBucket(bucket_list));
+  };
+};
+
+export const addBucketFB = (bucket) => {
+  return async function (dispatch) {
+    dispatch(isLoaded(false));
+    const docRef = await addDoc(collection(db, "bucket"), bucket);
+    // id 만 필요할 경우. 이미 필요한 내용들이 다 bucket에 있다.
+    const bucket_data = { id: docRef.id, ...bucket };
+
+    // const _bucket = await getDoc(docRef);
+    // const bucket_data = { id: _bucket.id, ..._bucket.data() };
+
+    dispatch(createBucket(bucket_data));
+
+    //  docRef.data(), 는 error
+    // 그 이유는 type이 doc이다. doc의 레퍼런스(참조값)이다.
+    // console.log("docRef = ", (await getDoc(docRef)).data());
+  };
+};
+
+// 버킷리스트의 수정은 done:false => true만 변경하기 때문에 데이터를 안받아옴
+export const updateBucketFB = (bucket_id) => {
+  return async function (dispatch, getState) {
+    // console.log("bucket_id = ", bucket_id);
+    const docRef = doc(db, "bucket", bucket_id);
+    // 어떤 아이를 바꿀꺼고, 어떤 값을 바꿀건지
+    await updateDoc(docRef, { done: true });
+    // 서버에 업데이트 된 내용이 잘 반영되었으니 리덕스의 값도 변경해준다.
+
+    // 버킷 리스트의 데이터를 전체 갖고온다. dispatch 두번째 인자
+    // console.log(getState().bucket);
+    const _bucket_list = getState().bucket.list;
+    // 전체 list index찾기
+    const bucket_index = _bucket_list.findIndex((item) => {
+      return item.id === bucket_id;
+    });
+    dispatch(updateBucket(bucket_index));
+    // console.log("bucket_index = ", bucket_index);
+  };
+};
+
+// 삭제될 미들웨어
+// 서버에 있는 데이터가 바뀐게 확실할때 리덕스의 값을 바꾼다.
+
+export const deleteBucketFB = (bucket_id) => {
+  return async function (dispatch, getState) {
+    if (!bucket_id) {
+      window.alert("아이디가 없어요");
+      return;
+    }
+    // 1. 어떤 도큐먼트를 지워줄 건지 가져온다.
+    const docRef = doc(db, "bucket", bucket_id);
+    // 2. 서버에서 어떤 도큐먼트 지울지
+    await deleteDoc(docRef);
+    // 3. 전체 버킷 리스트를 가져오기
+    const _bucket_list = getState().bucket.list;
+    // 4. 전체 버킷 리스트들 중에서 내가 파라미터로 받아온 버킷 아이디와 같은 것을 찾고
+    // 같다면 그 아이의 인덱스를 가져온다.
+    const bucket_index = _bucket_list.findIndex((item) => {
+      return item.id === bucket_id;
+    });
+    dispatch(deleteBucket(bucket_index));
+  };
+};
+
 // Reducer
 export default function reducer(state = initialState, action = {}) {
-  // console.log("이제 값을 바꿀꺼야");
   switch (action.type) {
+    case "bucket/ISLOADED":
+      return { ...state, is_loaded: action.loaded };
+    case "bucket/LOAD":
+      return { list: action.bucket_list, is_loaded: true };
+
     case "bucket/CREATE": {
       // 새로운 배열에 기존 값인 list와 새로운 데이터인 action의 bucket을 추가해준다.
       const new_bucket_list = [...state.list, action.bucket];
-      return { list: new_bucket_list };
+      return { ...state, list: new_bucket_list, is_loaded: true };
     }
     // 내가 한거
-    case "bucket/REMOVE": {
-      // 새로운 배열에 기존 값인 list와 새로운 데이터인 action의 bucket을 추가해준다.
-      const remove_bucket_list = [...action.bucket];
-      console.log("remove_bucket_list === ", action.bucket);
-      return { list: remove_bucket_list };
+    // case "bucket/REMOVE": {
+    //   // 새로운 배열에 기존 값인 list와 새로운 데이터인 action의 bucket을 추가해준다.
+    //   const remove_bucket_list = [...action.bucket];
+    //   console.log("remove_bucket_list === ", action.bucket);
+    //   return { list: remove_bucket_list };
+    // }
+    case "bucket/UPDATE": {
+      const new_bucket_list = state.list.map((item, index) => {
+        return parseInt(action.bucket_index) === index
+          ? { ...item, done: true }
+          : item;
+      });
+      return { ...state, list: new_bucket_list };
     }
     // 튜터님이 한것 filter를 여기서 한다.
     case "bucket/DELETE": {
@@ -54,8 +170,9 @@ export default function reducer(state = initialState, action = {}) {
       const new_bucket_list = state.list.filter((item, idx) => {
         return parseInt(action.bucket_index) !== idx;
       });
-      return { list: new_bucket_list };
+      return { ...state, list: new_bucket_list };
     }
+
     default:
       return state;
   }

@@ -136,6 +136,7 @@ export default App;
 * Collection은 Document의 모임이다.
 
 ```javascript
+// yarn add firebase
 // 데이터 가지고 올때 순서
 // 1. Collection 2. Docs
 // 1, db, 2, Collection 이름 현재 becket

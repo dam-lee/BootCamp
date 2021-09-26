@@ -2,18 +2,18 @@ import React from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { createRanking } from "./redux/modules/user";
+import { createRankingFB } from "./redux/modules/user";
 import { Container, Wrap, Title, Name, Input, RankinButton } from "./Style";
-import { db } from "./firebase";
-import { collection, addDoc } from "firebase/firestore";
+
 const Score = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const quiz_list = useSelector((state) => state.quiz.quiz_list);
   const user_answer_list = useSelector((state) => state.quiz.user_answer);
   const user_name = useSelector((state) => state.user.user_name);
-  const dispatch = useDispatch();
   const user_text = React.useRef(null);
 
-  const history = useHistory();
+  // 점수 계산
   const _score =
     (100 / quiz_list.length) * // 맞춘거를 계산
     quiz_list.filter((item, index) => {
@@ -30,8 +30,7 @@ const Score = () => {
       score,
       message: user_text.current.value,
     };
-    dispatch(createRanking(newRanking));
-    addDoc(collection(db, "quiz"), newRanking);
+    dispatch(createRankingFB(newRanking));
     history.push("/ranking");
     return;
   };

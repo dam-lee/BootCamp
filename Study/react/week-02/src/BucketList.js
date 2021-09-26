@@ -23,8 +23,9 @@ const BucketList = (props) => {
               className="list-item"
               key={index}
               onClick={() => onClick(index)}
+              done={list.done}
             >
-              {list}
+              {list.text}
             </ItemList>
           );
         })}
@@ -35,7 +36,8 @@ const BucketList = (props) => {
 const ItemList = styled.div`
   padding: 16px;
   margin: 8px;
-  background-color: aliceblue;
+  color:${(props) => (props.done ? "#fff" : "#333")};
+  background-color: ${(props) => (props.done ? "slateblue" : "aliceblue")}}
 `;
 // export {BucketList}
 export default BucketList;
