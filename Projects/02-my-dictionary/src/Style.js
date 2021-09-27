@@ -3,11 +3,13 @@ import styled from "styled-components";
 export const SpinnerContainer = styled.div`
   display: flex;
   position: fixed;
+  top: 0;
+  left: 0;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.3);
   z-index: 99;
 `;
 export const Mida = styled.span`
@@ -49,14 +51,9 @@ export const DictionaryTitle = styled.h1`
   }
 `;
 export const DictionaryListWrap = styled.div`
-  height: 70vh;
+  height: 71vh;
   padding-top: 10px;
   overflow-y: auto;
-  div {
-    &:nth-child(4) {
-      margin-bottom: 0;
-    }
-  }
 `;
 export const CreateButton = styled.button`
   position: absolute;
@@ -65,8 +62,9 @@ export const CreateButton = styled.button`
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #084075;
-  border: 1px solid #084075;
+  background-color: ${(props) => (props.add ? props.add : "#084075")};
+  border: ${(props) =>
+    props.add ? `1px solid ${props.add}` : "1px solid #084075"};
   box-shadow: 5px 5px 10px #adb5bd;
   cursor: pointer;
 `;
@@ -92,6 +90,7 @@ export const FlexBetween = styled.div`
   padding-bottom: 8px;
   border-bottom: 1px dotted #e9ecef;
   &:last-child {
+    padding-top: 8px;
     margin-bottom: 0;
   }
 `;

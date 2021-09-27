@@ -11,8 +11,8 @@ import {
   CreateWrap,
   CreateButton,
 } from "./Style";
-import { updateDictionary } from "./redux/modules/dictionary";
-const DictionaryUpdate = () => {
+import { updateDictionaryFB } from "./redux/modules/dictionary";
+const DictionaryUpdate = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const dictionary_list = useSelector((state) => state.dictionary.list);
@@ -21,30 +21,40 @@ const DictionaryUpdate = () => {
   );
 
   const [state, setStaet] = React.useState({
+    id: "",
+    index: 0,
     word: "",
     description: "",
     example: "",
   });
 
   const onUpdateDictionary = () => {
-    dispatch(updateDictionary(state, find_index));
+    dispatch(updateDictionaryFB(state, state.id));
     history.push("/");
-  };
-  const onLoad = () => {
-    setStaet({
-      word: dictionary_list[find_index].word,
-      description: dictionary_list[find_index].description,
-      example: dictionary_list[find_index].example,
-    });
   };
 
   const onChange = (e) => {
     setStaet({ ...state, [e.target.name]: e.target.value });
   };
 
+  const onLoad = () => {
+    setStaet({
+      id: dictionary_list[find_index].id,
+      index: dictionary_list[find_index].index,
+      word: dictionary_list[find_index].word,
+      description: dictionary_list[find_index].description,
+      example: dictionary_list[find_index].example,
+    });
+  };
+
   React.useEffect(() => {
-    onLoad();
-  }, [dictionary_list]);
+    if (dictionary_list.length === 0) {
+      history.push("/");
+    } else {
+      onLoad();
+    }
+  }, []);
+
   return (
     <>
       <DictionaryListWrap>

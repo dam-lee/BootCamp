@@ -5,15 +5,13 @@ import { Route } from "react-router-dom";
 import DictionaryCreate from "./DictionaryCreate";
 import DictionaryList from "./DictionaryList";
 import DictionaryUpdate from "./DictionaryUpdate";
-import Spinner from "./Spinner";
+
 import { useSelector } from "react-redux";
 function App() {
-  const is_loading = useSelector((state) => state.dictionary.is_loading);
+  const list = useSelector((state) => state.dictionary.list);
 
   return (
     <Container>
-      {!is_loading && <Spinner />}
-
       <DictionaryWrap>
         <DictionaryTitle>
           나만의 사전<Mida>_mida</Mida>
@@ -25,7 +23,7 @@ function App() {
           <DictionaryCreate />
         </Route>
         <Route path="/update/:index" exact>
-          <DictionaryUpdate />
+          <DictionaryUpdate all_list={list} />
         </Route>
       </DictionaryWrap>
     </Container>

@@ -1,7 +1,7 @@
 import React from "react";
 import { FaPlus, FaPen } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import {
   DictionaryItemContainer,
@@ -12,9 +12,9 @@ import {
   ItemTitle,
   ItemText,
 } from "./Style";
-import { deleteDictionary } from "./redux/modules/dictionary";
+import { deleteDictionaryFB } from "./redux/modules/dictionary";
 
-const DictionaryItem = ({ list, index }) => {
+const DictionaryItem = ({ list, index, id }) => {
   const history = useHistory();
   const idx = index;
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const DictionaryItem = ({ list, index }) => {
   };
 
   const onDelete = () => {
-    dispatch(deleteDictionary(list, index));
+    dispatch(deleteDictionaryFB(id));
     history.push(`/`);
   };
   return (

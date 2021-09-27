@@ -2,8 +2,8 @@ import React from "react";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { createDictionary } from "./redux/modules/dictionary";
-import Spinner from "./Spinner";
+import { createDictionaryFB } from "./redux/modules/dictionary";
+
 import {
   DictionaryListWrap,
   SubTitle,
@@ -16,7 +16,9 @@ import {
 const DictionaryCreate = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+
   const [state, setStaet] = React.useState({
+    date: "",
     word: "",
     description: "",
     example: "",
@@ -25,23 +27,31 @@ const DictionaryCreate = () => {
   const onChange = (e) => {
     setStaet({ ...state, [e.target.name]: e.target.value });
   };
+
   const onCreate = () => {
-    if (state.word === "") {
-      alert("단어를 입력해주세요");
-      return;
-    }
-    if (state.description === "") {
-      alert("설명을 입력해주세요");
-      return;
-    }
-    if (state.example === "") {
-      alert("예시를 입력해주세요");
-      return;
-    }
-    dispatch(createDictionary(state));
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    const date = today.getDate();
+    const day = today.getDay();
+    const hours = today.getHours();
+    const minutes = today.getMinutes();
+    const seconds = today.getSeconds();
+    const todayDate = `${year}${month}${date}${day}${hours}${minutes}${seconds}`;
+
+    if (state.word === "") return alert("단어를 입력해주세요");
+    if (state.description === "") return alert("설명을 입력해주세요");
+    if (state.example === "") return alert("예시를 입력해주세요");
+
+    dispatch(
+      createDictionaryFB({
+        date: todayDate,
+        word: state.word,
+        description: state.description,
+        example: state.example,
+      })
+    );
     history.push("/");
-    console.log("click");
-    console.log("state", state);
   };
   return (
     <>
@@ -83,7 +93,7 @@ const DictionaryCreate = () => {
             {state.example}
           </TextArea>
         </CreateWrap>
-        <CreateButton onClick={onCreate}>
+        <CreateButton add={"#fa5252"} onClick={onCreate}>
           <FaPlus
             style={{
               color: "#fff",

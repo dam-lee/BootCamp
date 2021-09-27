@@ -1,8 +1,12 @@
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
 import dictionary from "./modules/dictionary";
 
+const middlewares = [thunk];
 const rootReducer = combineReducers({ dictionary });
 
-const store = createStore(rootReducer);
+const enhancer = applyMiddleware(...middlewares);
+
+const store = createStore(rootReducer, enhancer);
 
 export default store;
