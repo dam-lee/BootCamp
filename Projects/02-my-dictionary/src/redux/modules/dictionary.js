@@ -81,12 +81,13 @@ export const updateDictionaryFB = (dictionary, id) => {
         description: dictionary.description,
         example: dictionary.example,
       });
+
       // 전체 리스트 가져올때 두번째 매개변수 getState 잊지말자
       const _list = getState().dictionary.list;
-      const list = _list.map((item) => {
+      const new_index = _list.findIndex((item) => {
         return item.id === id;
       });
-      dispatch(updateDictionary(list));
+      dispatch(updateDictionary(dictionary, new_index));
     } catch (error) {
       console.log(error);
     }
@@ -125,18 +126,19 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, list: action.dictionary };
     case "dictionary/CREATE":
       const addList = [...state.list, action.dictionary];
-      console.log("add = ", addList);
       return { ...state, list: addList };
     case "dictionary/UPDATE":
-      const updateList = state.list.map((item) => {
-        return item.id === action.id
+      const new_list = state.list.map((item, index) => {
+        return action.id === item.id
           ? {
               ...item,
-              ...action.dictionary,
+              word: action.dictionary.wrod,
+              description: action.dictionary.description,
+              example: action.description.example,
             }
           : item;
       });
-      return { ...state, list: updateList };
+      return { ...state, list: new_list };
     case "dictionary/DELETE":
       return { ...state, list: action.dictionary };
     default:

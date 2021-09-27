@@ -12,7 +12,7 @@ import {
   CreateButton,
 } from "./Style";
 import { updateDictionaryFB } from "./redux/modules/dictionary";
-const DictionaryUpdate = (props) => {
+const DictionaryUpdate = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const dictionary_list = useSelector((state) => state.dictionary.list);
@@ -38,13 +38,15 @@ const DictionaryUpdate = (props) => {
   };
 
   const onLoad = () => {
-    setStaet({
-      id: dictionary_list[find_index].id,
-      index: dictionary_list[find_index].index,
-      word: dictionary_list[find_index].word,
-      description: dictionary_list[find_index].description,
-      example: dictionary_list[find_index].example,
-    });
+    if (dictionary_list.length !== 0) {
+      setStaet({
+        id: dictionary_list[find_index].id,
+        index: dictionary_list[find_index].index,
+        word: dictionary_list[find_index].word,
+        description: dictionary_list[find_index].description,
+        example: dictionary_list[find_index].example,
+      });
+    }
   };
 
   React.useEffect(() => {
