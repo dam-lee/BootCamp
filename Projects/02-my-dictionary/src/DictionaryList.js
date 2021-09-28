@@ -20,7 +20,7 @@ const DictionaryList = () => {
 
   React.useEffect(() => {
     dispatch(loadDictionaryFB());
-  }, [dispatch]);
+  }, []);
 
   return (
     <>

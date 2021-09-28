@@ -31,8 +31,8 @@ export const createDictionary = (dictionary) => {
   return { type: CREATE, dictionary };
 };
 
-export const updateDictionary = (dictionary, id) => {
-  return { type: UPDATE, dictionary, id };
+export const updateDictionary = (dictionary) => {
+  return { type: UPDATE, dictionary };
 };
 
 export const deleteDictionary = (dictionary) => {
@@ -84,10 +84,10 @@ export const updateDictionaryFB = (dictionary, id) => {
 
       // 전체 리스트 가져올때 두번째 매개변수 getState 잊지말자
       const _list = getState().dictionary.list;
-      const new_index = _list.findIndex((item) => {
-        return item.id === id;
+      const list = _list.map((item) => {
+        return item.id === id ? { ...item, ...dictionary } : item;
       });
-      dispatch(updateDictionary(dictionary, new_index));
+      dispatch(updateDictionary(list));
     } catch (error) {
       console.log(error);
     }
@@ -106,8 +106,9 @@ export const deleteDictionaryFB = (id) => {
       const _list = getState().dictionary.list;
 
       // 리덕스에 있는 전체 데이터를 filter로 같지 않은애들만 걸러줌
-      const new_list = _list.filter((i) => {
-        return i.id !== id;
+      // findIndex()로 처리해줘도됨.
+      const new_list = _list.filter((item) => {
+        return item.id !== id;
       });
 
       // 걸러낸 애들을 dispatch 를 해서 바꿔줄거라고 명시함!
@@ -128,17 +129,7 @@ export default function reducer(state = initialState, action = {}) {
       const addList = [...state.list, action.dictionary];
       return { ...state, list: addList };
     case "dictionary/UPDATE":
-      const new_list = state.list.map((item, index) => {
-        return action.id === item.id
-          ? {
-              ...item,
-              word: action.dictionary.wrod,
-              description: action.dictionary.description,
-              example: action.description.example,
-            }
-          : item;
-      });
-      return { ...state, list: new_list };
+      return { ...state, list: action.dictionary };
     case "dictionary/DELETE":
       return { ...state, list: action.dictionary };
     default:

@@ -11,7 +11,7 @@ import {
   CreateWrap,
   CreateButton,
 } from "./Style";
-import { updateDictionaryFB } from "./redux/modules/dictionary";
+import { is_loading, updateDictionaryFB } from "./redux/modules/dictionary";
 const DictionaryUpdate = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -28,8 +28,10 @@ const DictionaryUpdate = () => {
     example: "",
   });
 
-  const onUpdateDictionary = () => {
-    dispatch(updateDictionaryFB(state, state.id));
+  const onUpdateDictionary = async () => {
+    dispatch(is_loading(false));
+    await dispatch(updateDictionaryFB(state, state.id));
+    dispatch(is_loading(true));
     history.push("/");
   };
 
@@ -38,18 +40,17 @@ const DictionaryUpdate = () => {
   };
 
   const onLoad = () => {
-    if (dictionary_list.length !== 0) {
-      setStaet({
-        id: dictionary_list[find_index].id,
-        index: dictionary_list[find_index].index,
-        word: dictionary_list[find_index].word,
-        description: dictionary_list[find_index].description,
-        example: dictionary_list[find_index].example,
-      });
-    }
+    setStaet({
+      id: dictionary_list[find_index].id,
+      index: dictionary_list[find_index].index,
+      word: dictionary_list[find_index].word,
+      description: dictionary_list[find_index].description,
+      example: dictionary_list[find_index].example,
+    });
   };
 
   React.useEffect(() => {
+    // 업데이트 페이지에서 새로고침 하면 오류뜨는 부분 방지
     if (dictionary_list.length === 0) {
       history.push("/");
     } else {
