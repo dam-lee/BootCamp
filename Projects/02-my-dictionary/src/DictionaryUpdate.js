@@ -20,7 +20,7 @@ const DictionaryUpdate = () => {
     history.location.pathname.split("/").reverse()[0]
   );
 
-  const [state, setStaet] = React.useState({
+  const [state, setState] = React.useState({
     id: "",
     index: 0,
     word: "",
@@ -34,12 +34,12 @@ const DictionaryUpdate = () => {
   };
 
   const onChange = (e) => {
-    setStaet({ ...state, [e.target.name]: e.target.value });
+    setState({ ...state, [e.target.name]: e.target.value });
   };
 
   const onLoad = () => {
     console.log("update");
-    setStaet({
+    setState({
       id: dictionary_list[find_index].id,
       index: dictionary_list[find_index].index,
       word: dictionary_list[find_index].word,

@@ -17,7 +17,7 @@ const DictionaryCreate = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [state, setStaet] = React.useState({
+  const [state, setState] = React.useState({
     date: "",
     word: "",
     description: "",
@@ -25,7 +25,7 @@ const DictionaryCreate = () => {
   });
 
   const onChange = (e) => {
-    setStaet({ ...state, [e.target.name]: e.target.value });
+    setState({ ...state, [e.target.name]: e.target.value });
   };
 
   const onCreate = () => {
