@@ -54,7 +54,7 @@ const DictionaryItem = ({ list, index, id }) => {
           </FlexBetween>
           <FlexBetween>
             <ItemTitle>예시</ItemTitle>
-            <ItemText>{list.example}</ItemText>
+            <ItemText color="blue">{list.example}</ItemText>
           </FlexBetween>
         </DictionaryItemWrap>
       </DictionaryItemContainer>

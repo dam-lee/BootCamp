@@ -102,6 +102,7 @@ export const ItemText = styled.p`
   flex: 1;
   font-size: 12px;
   line-height: 1.5;
+  color: ${(props) => props.color && `#4dabf7`};
   white-space: pre-line;
 `;
 export const SubTitle = styled.h3`
