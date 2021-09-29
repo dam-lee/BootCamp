@@ -33,11 +33,10 @@ const DictionaryCreate = () => {
     const year = today.getFullYear();
     const month = today.getMonth() + 1;
     const date = today.getDate();
-    const day = today.getDay();
     const hours = today.getHours();
     const minutes = today.getMinutes();
     const seconds = today.getSeconds();
-    const todayDate = `${year}${month}${date}${day}${hours}${minutes}${seconds}`;
+    const todayDate = `${year}${month}${date}${hours}${minutes}${seconds}`;
 
     if (state.word === "") return alert("단어를 입력해주세요");
     if (state.description === "") return alert("설명을 입력해주세요");

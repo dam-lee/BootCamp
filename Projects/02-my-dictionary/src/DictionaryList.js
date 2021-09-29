@@ -11,9 +11,7 @@ const DictionaryList = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.dictionary.is_loading);
   const _list = useSelector((state) => state.dictionary.list);
-
   const list = _list.sort((a, b) => b.date - a.date);
-
   const onButtonClick = () => {
     history.push("/create");
   };

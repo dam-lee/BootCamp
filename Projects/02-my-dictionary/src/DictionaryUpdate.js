@@ -11,7 +11,7 @@ import {
   CreateWrap,
   CreateButton,
 } from "./Style";
-import { is_loading, updateDictionaryFB } from "./redux/modules/dictionary";
+import { updateDictionaryFB } from "./redux/modules/dictionary";
 const DictionaryUpdate = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -29,9 +29,7 @@ const DictionaryUpdate = () => {
   });
 
   const onUpdateDictionary = async () => {
-    dispatch(is_loading(false));
     await dispatch(updateDictionaryFB(state, state.id));
-    dispatch(is_loading(true));
     history.push("/");
   };
 
@@ -40,6 +38,7 @@ const DictionaryUpdate = () => {
   };
 
   const onLoad = () => {
+    console.log("update");
     setStaet({
       id: dictionary_list[find_index].id,
       index: dictionary_list[find_index].index,
