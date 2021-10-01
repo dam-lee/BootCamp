@@ -1,9 +1,20 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Post from "../components/Post";
+import { actionCreators as postActions } from "../redux/modules/post";
 const PostList = (props) => {
+  const dispatch = useDispatch();
+  const post_list = useSelector((state) => state.post.list);
+  console.log("post_list = ", post_list);
+
+  React.useEffect(() => {
+    dispatch(postActions.getPostFB());
+  }, []);
   return (
     <>
-      <Post />
+      {post_list.map((item, idx) => {
+        return <Post {...item} key={item.id} />;
+      })}
     </>
   );
 };

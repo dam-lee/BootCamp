@@ -13,6 +13,8 @@ const Button = (props) => {
     fontWeight,
     onClick,
     children,
+    hoverBg,
+    hoverColor,
   } = props;
   const styles = {
     bg: bg,
@@ -23,6 +25,8 @@ const Button = (props) => {
     border: border,
     fontSize: fontSize,
     fontWeight: fontWeight,
+    hoverBg: hoverBg,
+    hoverColor: hoverColor,
   };
   return (
     <ButtonWrap {...styles} onClick={onClick}>
@@ -52,5 +56,9 @@ const ButtonWrap = styled.button`
   font-weight: ${(props) => props.fontWeight};
   cursor: pointer;
   box-sizing: border-box;
+  &:hover {
+    color: ${(props) => props.hoverColor};
+    background-color: ${(props) => props.hoverBg};
+  }
 `;
 export default Button;

@@ -5,5 +5,6 @@ import FormGrid from "./FormGrid";
 import Input from "./Input";
 import Button from "./Button";
 import Label from "./Label";
+import TextArea from "./TextArea";
 
-export { Grid, Image, Text, FormGrid, Input, Button, Label };
+export { Grid, Image, Text, FormGrid, Input, Button, Label, TextArea };

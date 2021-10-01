@@ -1,22 +1,32 @@
 import React from "react";
 import { Text, FormGrid, Input, Button, Label, Grid } from "../elements";
-
+import { useDispatch } from "react-redux";
+import { actionCreators as useActions } from "../redux/modules/user";
+import { regCheck } from "../shared/regExpCheck";
 const Signup = (props) => {
+  const dispatch = useDispatch();
   const [state, setState] = React.useState({
     id: "",
     nikname: "",
     password: "",
     password_check: "",
   });
+
   const onChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
+
   const onClick = () => {
+    if (state.id !== "") regCheck(state.id);
     if (state.password !== state.password_check) {
       alert("비밀번호가 서로 다릅니다. 다시 확인해주세요");
       return;
     }
-    alert("회원가입 성공!");
+    if (state.id === "" || state.nikname === "" || state.password === "") {
+      alert("필수값을 입력해주세요");
+      return;
+    }
+    dispatch(useActions.signupFB(state.id, state.password, state.nikname));
   };
 
   return (
