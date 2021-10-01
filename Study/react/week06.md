@@ -480,3 +480,242 @@ async function myFunc() {
   console.log(result); // then(후처리 함수)를 쓰지 않았는데도, 1초 후에 완료!가 콘솔에 찍힌다.
 }
 ```
+
+## 토큰 기반 인증
+
+- 예전에는 사용자의 로그인 상태를 서버가 전부 가지고 로그인 여부를 전부 기록하고 기록했다. (서버의 세션에 저장 = 세션 기반 인증 방식)
+- 세션 기반 인증 방식의 단점 = 백명 만명의 사용자가 로그인하면 서버 부하가 옴
+- 서버 부하를 막기 위해 서버를 나누기도 했는데 이럴 경우 관리가 굉장히 복잡해짐
+- **최근** 이러한 문제를 해결하기 위해 토큰 기반 인증 방식으로 진행한다.
+
+### 토큰 기반 인증
+
+- 로그인 정보를 세션에 담지 않는다.
+- 사용자가 로그인 하면 -> 유저가 맞는지 확인한후, 유저가 맞을 경우 토큰을 발급(나만의 티켓)
+- 클라이언트는 토큰을 저장해놓고, 게시글을 작성하거나 요청할때 토큰을 같이 보낸다.
+- 서버는 그러면 토큰을 확인하고 요청에 맞는 응답을 해준다.
+
+### OAuth 2.0 ?
+
+- 토큰 기반 인증의 프레임워크
+- 정식으로는 외부 서비스의 인증 및 권한 부여를 관리하는 프레임 워크
+
+### OAuth 동작 방식
+
+- 클라이언트가 서버에 로그인(인증)하면 서버가 access_token을 준다
+- 클라이언트는 access_token을 이용해서 API요청을 한다.
+- 서버는 API 요청을 받고 access_token을 가지고 권한 여부를 확인하고 클라리언트에 응답함
+- OAuth는 소셜 로그인 처럼 외부 서비스도 엮을 수 있다
+
+> ### 구글 로그인할때
+>
+> 1. 유저가 우리 사이트에 방문할때 구글에 로그인 페이지 요청
+> 2. 사이트가 다시 유저한테 구글 로그인 페이지를 보내줌
+> 3. 유저가 구글에 로그인을 함.
+> 4. 구글은 id/pw를 확인하고 유저한테 확인된 인증 정보를 보냄 **(토큰이 아니라 권한 증서 = Authorization 코드를 발급했다고 말함)**
+> 5. 유저가 받은 Authorization 코드를 우리 사이트에 보내줌.
+> 6. 우리 사이트는 Authorization 코드를 다시 구글에 보내주고 access_token 을 달라고 요청함.
+> 7. 구글은 access_token 을 우리 사이트에 보내줌.
+> 8. 우리 사이트는 다시 access_token 을 유저한테 보내준다.
+> 9. 유저는 access_token 을 이용해서 게시글 쓰거나 할때 같이 보내줌으로 우리 사이트는 토큰을 확인해서 맞을 때마다 응답을 해줌.
+> 10. 토큰은 기간이 정해져 있어 만료가 되기 때문에 유저의 토큰이 만료되서 넘어오면 만료되었는지 아닌지 확인한 후, refresh token 을 구글에 보내서 새로운 토큰을 요청한다.
+> 11. 구글한테 새로운 토큰을 받은 후, 우리 사이트는 다시 유저에게 새로운 토큰을 보내준다.
+> 12. 둘다 만료되면, 유저한테 로그인을 다시 시킨다.
+
+### JWT (Json Web Token)
+
+- 토큰의 한 형식으로 데이터가 JSON형태로 이루어져 있는 토큰이다.
+- 토큰이 누군가에게 탈취가 되어서 탈취 여부를 확인하는 전자 서명이 포함되어있는 토큰이다.
+
+#### 생김새
+
+- header, payload (내용), signature (서명)로 이루어짐.
+- header : 토큰 타입과, 암호화 방식 정보가 들어감.
+- payload : 토큰에 담을 정보가 name:value 형태로 들어감
+- signature : 서명 정보, secret key를 포함해서 header, payload 정보가 암호화 된다. (3개가 모두 암호화 된다고 보면 됨)
+
+#### 동작 방식
+
+1. 유저가 로그인을 시도함.
+2. 서버가 요청을 확인하고 secret key를 가지고 access_token을 발급
+3. 클라이언트에 JWT를 전달함.
+4. 클라이언트는 API요청을 할 때 Authorization header에 JWT를 담아서 보낸다.
+
+- Authorization header 란 HTTP 통신을 할 때 header에 들어가는 한 종류라고 생각.
+- https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Authorization
+
+5. 서버는 JWT의 서명을 확인하고 payload에서 정보를 확인하고 API응답을 보냄.
+
+### JWT vs OAuth?
+
+- JWT와 OAuth는 로그인에 많이 쓰이는 두 인증 방식
+- JWT는 토큰의 한 형식이고 OAuth는 프레임워크이다.
+- OAuth에서 토큰으로 JWT를 사용할 수도 있다.
+
+## 웹 저장소(feat. 토큰)
+
+- 토큰을 어디다 저장하면 좋을지, 클라이언트에서 쓸 수 있는 여러가지 저장소들
+
+### 클라이언트 저장소
+
+- 개발자도구 - Application - Storage
+
+#### 1. 쿠키
+
+- 클라이언트 로컬에 저장되는 key:value 형태의 저장소. 약 4KB 정도 저장할 수 있다.
+
+```javascript
+// key는 MY_COOKIE, value는 here,
+document.cookie = "MY_COOKIE=here;";
+console.log(document.cookie);
+
+// 쿠키 삭제
+document.cookie =
+  "MY_COOKIE=here; expires=new Date('2020-12-12').toUTCString()";
+```
+
+#### 2. 세션 스토리지
+
+- HTML5에서 추가된 저장소. 쿠키와 마찬가지로 key:value 형태
+- 브라우저를 닫으면 데이터가 사라진다.
+- 장바구니 같은 경우 계속 유지되어야 하기 때문에 그럴 때 사용할 수 없다.
+
+```javascript
+// 추가
+sessionStorage.setItem("MY_SESSION", "here");
+
+// 가져오기
+sessionStorage.getItem("MY_SESSION");
+
+// 삭제
+// 하나만 삭제하고 싶다면, 이렇게 키를 통해 삭제
+sessionStorage.removeItem("MY_SESSION");
+
+// 몽땅 지우고 싶을 땐 clear()를 쓴다.
+sessionStorage.clear();
+```
+
+#### 3. 로컬 스토리지
+
+- HTML5에서 추가된 저장소. 쿠키와 마찬가지로 key:value 형태
+- 세션 스토리지는 브라우저를 닫으면 데이터가 없으지기 때문에 로컬 스토리지를 사용한다.
+- 따로 삭제하지 않으면 계속 브라우저에 저장된다.
+- 유저 정보(비밀번호,계좌번호)처럼 중요한 정보는 로컬 스토리지에 저장하면 위험하기 때문에 안된다.
+
+```javascript
+// 추가
+localStorage.setItem("MY_LOCAL", "here");
+
+// 가져오기
+localStorage.getItem("MY_LOCAL");
+
+// 하나만 삭제하고 싶다면, 이렇게 키를 통해 삭제
+localStorage.removeItem("MY_LOCAL");
+
+// 몽땅 지우고 싶을 땐 clear()를 쓴다
+localStorage.clear();
+```
+
+#### 4. 토큰은 어디에 저장하는게 좋은가?
+
+- 예전에는 토큰을 저장할 고싱 쿠키밖에 없었지만, 이제는 다양해져서 로컬 스토리지에 저장하는 일이 많지만, 상황에 따라서 자유롭게 저장하면 된다.
+
+* http통신을 할때 쿠키를 같이 보낸다. 토큰만 넣고 모든 api요청에 토큰이 필요하면 편하다.
+* 쿠키는 사용하는 방법이 다른것에 비해 불편함. 만료일 설정 및 데이터 가져올때도 쿠키를 전체 가져와야 하기 때문에 파싱을 해줘야한다.
+* 쿠키는 4kb만 저장, 로컬 스토리지는 5mb까지 저장
+* 로컬 스토리지의 정보는 http 통신에 딸려 들어가지 않는다.
+* 세션 스토리지는 저장소에 정보를 유지할 필요가 없을때는 세션 스토리지에 저장한다. (로그인을 계속 유지하지 않는 사이트)
+* 상황에 맞춰서 프로젝트에 맞춰 쓰면 된다.
+
+## 로그인 하기 (헤더 분기)
+
+```javascript
+// 이건 리덕스와 리덕스 모듈 내에서 경로 이동까지 하게 해줄 히스토리, 라우터와 히스토리를 엮어줄 모듈까지 한번에 설치
+yarn add redux react-redux redux-thunk redux-logger history@4.10.1 connected-react-router@6.8.0
+
+// 프론트엔드의 꽃 리액트 강의에서는 리듀서에서 뭔가를 바꿀 때 불변성 관리를 우리가 신경썼죠.
+//이번엔 우리가 신경쓰지 말고, 임머라는 패키지 사용해서 해볼거예요.
+//그리고 액션도 매번 맨 위에서 user/CREATE처럼 리듀서 모듈 명에 어떤 타입 넣어서 만들고,
+// 그 아래에는 액션 생성 함수 만들어서 export 다 해주고 좀 귀찮았죠.
+//이걸 redux-actions라는 패키지로 좀 더 편하게 쓸 수 있다.
+yarn add immer redux-actions
+```
+
+```javascript
+import { createAction, handleActions } from "redux-actions";
+```
+
+## 리덕스 사용해서 로그인 정보 관리
+
+> ### 새로 배운것들 immer, redux-actions
+
+### redux-actions
+
+- 액션 생성 함수를 좀 더 간편하게 만들 수 있다.
+
+```javascript
+// yarn add redux-actions
+// yarn add immer
+// redux - modules
+import { produce } from "immer"; // import 불러옴
+import { createAction, handleActions } from "redux-actions"; // import로 불러옴
+// 액션 타입 만들고,
+const LOGIN = "LOGIN";
+const LOGOUT = "LOGOUT";
+const GET_USER = "GET_USER";
+
+// 여기서 중요!. 기존 액션 생성함수에서 만들기에서
+// createAction 로 액션 생성 함수를 만들때는 이렇게 사용한다.
+const login = createAction(타입, (데이터) => ({ 데이터 }));
+const logIn = createAction(LOGIN, (user) => ({ user }));
+
+// 리듀서를 handleActions 을 사용해서 만들때!!
+const reducer = handleActions(
+  {
+    [타입]: (state, action) => {
+      수행할일;
+    },
+  },
+  초기값
+);
+
+// immer와 같이 사용해서 리듀서를 만들때!!
+export default handleActions(
+  // [type]:(state,action) => { immer의 produce를 사용한다! }
+  // [type]:(state,action) => produce(첫번째 파라미터에는 수정하고 싶은 상태, 두번째 파라미터에는 어떻게 업데이트하고 싶을지 정의하는 함수)
+  // [type]:(state,action) => produce(state:수정하고 싶은 상태 , (draft) => {어떻게 업데이트 하고 싶은지, draft가 불변성을 유지})
+  {
+    [LOGIN]: (state, action) =>
+      produce(state, (draft) => {
+        setCookie("is_login", "success");
+        // 불변성을 유지하기 위해 draft.user
+        // 중간에 payload를 거치고 변경할 값
+        draft.user = action.payload.user;
+        draft.is_login = true;
+      }),
+    [GET_USER]: (state, action) => produce(state, (draft) => {}),
+  },
+  initialState
+);
+// 액션 생성함수를 export 한다.
+const actionCreators = {
+  logIn,
+  logOut,
+  getUser,
+  loginAction,
+};
+
+export { actionCreators };
+```
+
+### immer : 불변성 유지해준다.
+
+- a라는 데이터를 불변성을 유지하고 싶으면 immer가 a-1을 만들어서 a-1을 고친다.
+- immer를 쓰면 알아서 불변성을 지켜주기 때문에 편하게 사용가능.
+- <code>produce(state, (복사할 원본 값을 넘겨주는 draft를 받아온다.) => {})</code>
+
+```javascript
+// yarn add immer
+// redux - modules
+import { produce } from "immer"; // import 불러옴
+```
