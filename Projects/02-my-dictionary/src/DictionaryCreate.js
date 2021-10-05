@@ -52,6 +52,7 @@ const DictionaryCreate = () => {
     );
     history.push("/");
   };
+
   return (
     <>
       <DictionaryListWrap>
