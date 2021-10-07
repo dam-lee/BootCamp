@@ -1,50 +1,42 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
 import { useHistory } from "react-router-dom";
-import Magazine from "../components/Magazine";
+import { useDispatch, useSelector } from "react-redux";
+// import { actionCreators as magazineActions } from "../redux/modules/magazine";
 import { Grid } from "../elements";
 import { FaPlus } from "react-icons/fa";
+import { getMagazineFB } from "../redux/modules/magazine";
+import Magazine from "../components/Magazine";
+
 const MagazineList = (props) => {
   const history = useHistory();
-  const data = [
-    {
-      date: "2021-10-06",
-      title: "제목 1",
-      text: "안녕하세요 오늘은 수요일입니다. 과제는 금요일 저녁까지 제출해야해요. 너무 힘듭니다. 하하하핫",
-      user_name: "이미다",
-      like: 10,
-      src: "https://cdn.dailyimpact.co.kr/news/photo/201901/50650_10024_2221.jpg",
-    },
-    {
-      date: "2021-10-07",
-      title: "아이유 사진",
-      text: "안녕하세요 오늘은 수요일입니다. 과제는 금요일 저녁까지 제출해야해요. 너무 힘듭니다. 하하하핫 안녕하세요 오늘은 수요일입니다. 과제는 금요일 저녁까지 제출해야해요. 너무 힘듭니다. 하하하핫",
-      user_name: "이루이",
-      like: 8,
-      src: "http://img.khan.co.kr/news/2020/10/16/2020101601001687000138341.jpg",
-    },
-    {
-      date: "2021-10-08",
-      title: "아이유",
-      text: "안녕하세요 오늘은 수요일입니다. 과제는 금요일 저녁까지 제출해야해요. 너무 힘듭니다. 하하하핫",
-      user_name: "아이유",
-      like: 7,
-      src: "https://dimg.donga.com/wps/NEWS/IMAGE/2021/01/17/104953245.2.jpg",
-    },
-  ];
+  const dispatch = useDispatch();
+  const list = useSelector((state) => state.magazine.list);
+  React.useEffect(() => {
+    dispatch(getMagazineFB());
+  }, []);
+
   return (
     <div style={{ position: "relative" }}>
-      <Grid padding="15px 20px 25px">
-        {data.map((item, index) => {
-          return <Magazine key={index} {...item} />;
-        })}
-        <CreateButtonWrap onClick={() => history.push(`/create`)}>
-          <FaPlus style={{ fontSize: "22px" }} />
-        </CreateButtonWrap>
-      </Grid>
+      {list.map((item) => {
+        return (
+          <Grid
+            key={item.id}
+            padding="15px 20px 25px"
+            onClick={() => history.push(`/detail/${item.id}`)}
+          >
+            <Magazine key={item.id} {...item} />
+          </Grid>
+        );
+      })}
+
+      <CreateButtonWrap onClick={() => history.push(`/create`)}>
+        <FaPlus style={{ fontSize: "22px" }} />
+      </CreateButtonWrap>
     </div>
   );
 };
+
 const boxFade = keyframes`
   0% {
     background-color: #000;
@@ -53,6 +45,7 @@ const boxFade = keyframes`
     background-color: #e03131;
   }
 `;
+
 const CreateButtonWrap = styled.button`
   position: fixed;
   right: 33vw;

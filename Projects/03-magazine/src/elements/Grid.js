@@ -2,7 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 const Grid = (props) => {
-  const { is_flex, justify, width, margin, padding, bg, children } = props;
+  const { is_flex, justify, width, margin, padding, bg, onClick, children } =
+    props;
   const styles = {
     is_flex: is_flex,
     justify: justify,
@@ -12,7 +13,11 @@ const Grid = (props) => {
     bg: bg,
   };
 
-  return <GridWrap {...styles}>{children}</GridWrap>;
+  return (
+    <GridWrap {...styles} onClick={onClick}>
+      {children}
+    </GridWrap>
+  );
 };
 
 Grid.defaultProps = {
@@ -22,6 +27,7 @@ Grid.defaultProps = {
   margin: "0",
   padding: "0",
   bg: "#fff",
+  onClick: () => {},
 };
 
 const GridWrap = styled.div`

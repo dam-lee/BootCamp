@@ -35,5 +35,8 @@ const TextWrap = styled.p`
   ${(props) => (props.bold ? `font-weight:bold` : "")};
   ${(props) => (props.light ? `font-weight:300px` : "")};
   white-space: pre-wrap;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 export default Text;
