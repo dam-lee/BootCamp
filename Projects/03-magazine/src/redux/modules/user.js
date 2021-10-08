@@ -9,31 +9,27 @@ import {
   signOut,
 } from "firebase/auth";
 
-import { createAction, handleActions } from "redux-actions";
-import { produce } from "immer";
 import { setCookie, deleteCookie } from "../../shared/Cookie";
 
 // 1. action type
 const LOGOUT = "LOGOUT";
-const GET_USER = "GET_USER";
 const SET_USER = "SET_USER";
 
 const initialState = {
   user: null,
   is_login: false,
 };
-// user 1명에 대한 기본 값
-const user_initial = {
-  user_name: "mida",
-};
+
 // 2. action 생성 함수
-export const setUser = createAction(SET_USER, (user) => ({ user }));
-export const logout = createAction(LOGOUT, (user) => ({ user }));
-export const get_user = createAction(GET_USER, (user) => ({ user }));
+export const setUser = (user) => {
+  return { type: SET_USER, user };
+};
+export const logout = (user) => {
+  return { type: LOGOUT, user };
+};
 
 // 3. 비동기 통신
-
-const loginFB = (user_id, user_pw) => {
+export const loginFB = (user_id, user_pw) => {
   return function (dispatch, getState, { history }) {
     const auth = getAuth();
     // setPersistence firebase의 인증 상태 지속 유지
@@ -62,7 +58,7 @@ const loginFB = (user_id, user_pw) => {
   };
 };
 
-const signupFB = (user_id, user_pw, user_name) => {
+export const signupFB = (user_id, user_pw, user_name) => {
   return function (dispatch, getState, { history }) {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, user_id, user_pw)
@@ -97,7 +93,7 @@ const signupFB = (user_id, user_pw, user_name) => {
   };
 };
 
-const loginCheckFB = () => {
+export const loginCheckFB = () => {
   return function (dispatch, getState, { history }) {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
@@ -121,7 +117,7 @@ const loginCheckFB = () => {
   };
 };
 
-const logoutFB = () => {
+export const logoutFB = () => {
   return function (dispatch, getState, { history }) {
     const auth = getAuth();
     signOut(auth)
@@ -137,34 +133,17 @@ const logoutFB = () => {
 };
 
 // 4. 리듀서
-export default handleActions(
-  {
-    [SET_USER]: (state, action) =>
-      produce(state, (draft) => {
-        setCookie("is_login", "success");
-        draft.user = action.payload.user;
-        draft.is_login = true;
-      }),
-    [LOGOUT]: (state, action) =>
-      produce(state, (draft) => {
-        deleteCookie("is_login");
-        draft.user = null;
-        draft.is_login = false;
-      }),
-    [GET_USER]: (state, action) => produce(state, (draft) => {}),
-  },
-  initialState
-);
-
-// 액션 생성함수를 export 한다.
-const actionCreators = {
-  setUser,
-  loginFB,
-  logout,
-  get_user,
-  signupFB,
-  loginCheckFB,
-  logoutFB,
-};
-
-export { actionCreators };
+export default function reducer(state = initialState, action = {}) {
+  switch (action.type) {
+    case "SET_USER": {
+      setCookie("is_login", "success");
+      return { is_login: true, user: action.user };
+    }
+    case "LOGOUT": {
+      deleteCookie("is_login");
+      return { is_login: false, user: null };
+    }
+    default:
+      return state;
+  }
+}

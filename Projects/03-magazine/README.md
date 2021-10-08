@@ -1,70 +1,58 @@
-# Getting Started with Create React App
+# Magazine
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- 항해99 3기 리액트 심화 과정 과제
 
-## Available Scripts
+## 사용방법
 
-In the project directory, you can run:
+- 비회원도 게시물을 볼 수 있습니다.
+- 게시글 등록은 회원만 가능합니다.
+- 게시글 수정/삭제는 본인이 작성한 글만 가능합니다.
 
-### `yarn start`
+### 미완성 기능
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- 좋아요 기능 미완성 (현재는 클릭시 아이콘 변경, 숫자 변경만 되며 저장안됨)
+- 반응형 구현
+- 댓글 기능
+- 마이페이지
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 과제 필수 기능
 
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- `1) 매거진 사이트 완성`, `2) 파이어베이스 or S3로 배포` 두 가지를 모두 완수해야 합니다.
+  기능 목록
+  1. 게시글
+     1. 목록 가져오기
+     2. 추가하기 (+이미지 업로드하기)
+     3. 삭제하기
+     4. 수정하기
+  2. 좋아요
+     1. 게시글에 좋아요하기
+     2. 게시글에 좋아요 취소하기
+  3. 회원가입하기
+  4. 로그인하기
+  5. 파이어베이스 or S3로 배포!
+     페이지별 상세페이지별 상세
+  6. 회원가입 페이지
+     1. 이메일 형식 체크, 비밀번호 체크할 것
+  7. 로그인 페이지
+     1. 이메일, 패스워드 미기입 시 로그인 버튼 활성화 막을 것
+  8. 메인 페이지(게시글 목록 페이지)
+     1. 게시글 목록 노출
+     2. 무한 스크롤
+     3. 게시글 하나는 작성자, 작성 시간, 이미지 미리보기, 텍스트 내용으로 구성
+     4. 게시글 하나를 클릭 시, 게시글 상세 페이지로 이동
+     5. 게시글 중 좋아요버튼(분홍색 하트 버튼)을 누르면 [좋아요]를 +1한다. 다시 누르면 분홍색 하트가 회색 하트가 되고 좋아요가 -1개 된다.
+  9. 글 작성 페이지
+     1. 레이아웃 선택 버튼
+        1. 3가지 레이아웃 중 선택하도록 한다.
+           - 이미지가 오른편에, 텍스트는 왼편에 위치한 레이아웃
+           - 이미지가 왼편에, 텍스트는 오른편에 위치한 레이아웃
+           - 텍스트가 위에, 이미지는 아래에 위치한 레이아웃
+        2. 레이아웃 선택 시, 게시글 레이아웃(모양새)대로 보이도록 한다.
+        3. **텍스트, 이미지 중 입력 안된 게 있다면 게시글 작성 버튼 비활성화**
+        4. 작성 완료 시 메인 페이지로 이동
+  10. 게시글 상세 페이지
+      1. 게시글 레이아웃에 맞춰 이미지, 텍스트 위치 조절해서 노출
+         추가로 해보면 좋을 기능(필수❌)
+  - 이미지 여러장 업로드 (상세 페이지에서는 슬라이더로 이미지 넘겨가며 보도록 처리)
+  - 알림 기능 만들기 (+알림페이지도 추가할 것!)
+  - 좋아요 눌렀을 때 게시글 위로 하트 이미지가 나타났다 사라지게 해보기

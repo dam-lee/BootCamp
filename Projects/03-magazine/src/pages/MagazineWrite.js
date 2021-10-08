@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { history } from "../redux/configureStore";
 import { useDispatch, useSelector } from "react-redux";
 import { addMagazineFB, updateMagazineFB } from "../redux/modules/magazine";
@@ -78,15 +79,15 @@ const MagazineWrite = (props) => {
         />
       </Grid>
       <Grid width="100%" margin="10px 0 0">
-        <textarea
+        <TextArea
           name="contents"
-          style={{ width: "100%", padding: "10px", resize: "none" }}
           rows="7"
           onChange={onChange}
           value={state.contents}
+          placeholder="내용을 입력해주세요"
         >
           {state.contents}
-        </textarea>
+        </TextArea>
       </Grid>
       <Button
         width="100%"
@@ -104,4 +105,10 @@ const MagazineWrite = (props) => {
 };
 
 MagazineWrite.defaultProps = {};
+const TextArea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  resize: none;
+`;
+
 export default MagazineWrite;

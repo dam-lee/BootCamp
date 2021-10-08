@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { actionCreators as userActions } from "../redux/modules/user";
+import { logoutFB } from "../redux/modules/user";
 import { Button, Grid } from "../elements";
 import { history } from "../redux/configureStore";
 import { apiKey } from "../shared/firebase";
@@ -17,7 +17,7 @@ const Header = (props) => {
   // 로그인 체크를 해서 리덕스에 데이터를 넣어준다.
 
   const logout = () => {
-    dispatch(userActions.logoutFB({}));
+    dispatch(logoutFB({}));
   };
 
   React.useEffect(() => {}, [is_login]);
@@ -70,7 +70,7 @@ const Header = (props) => {
               margin="0px 5px 0px 0px"
               padding="15px 0px"
               hoverColor="#fff"
-              onClick={() => history.push(`/myPage`)}
+              // onClick={() => history.push(`/myPage`)}
             >
               마이페이지
             </Button>
@@ -79,7 +79,7 @@ const Header = (props) => {
               color="#adb5bd"
               padding="15px"
               hoverColor="#fff"
-              onClick={() => history.push(`/noti`)}
+              // onClick={() => history.push(`/noti`)}
             >
               알림
             </Button>

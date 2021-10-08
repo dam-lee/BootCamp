@@ -2,7 +2,7 @@ import React from "react";
 import { Text, Grid, Input, Label, Button } from "../elements";
 import { emailCheck } from "../shared/regExp";
 import { useDispatch } from "react-redux";
-import { actionCreators as userActions } from "../redux/modules/user";
+import { signupFB } from "../redux/modules/user";
 const Signup = (props) => {
   const dispatch = useDispatch();
   const [active, setActive] = React.useState(true);
@@ -49,9 +49,7 @@ const Signup = (props) => {
       state.user_pw === state.user_pwCheck &&
       state.user_name !== ""
     ) {
-      dispatch(
-        userActions.signupFB(state.user_id, state.user_pw, state.user_name)
-      );
+      dispatch(signupFB(state.user_id, state.user_pw, state.user_name));
     }
   };
 

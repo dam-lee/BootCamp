@@ -2,7 +2,7 @@ import React from "react";
 import { Text, Grid, Input, Label, Button } from "../elements";
 import { emailCheck } from "../shared/regExp";
 import { useDispatch } from "react-redux";
-import { actionCreators as userActions } from "../redux/modules/user";
+import { loginFB } from "../redux/modules/user";
 const Login = (props) => {
   const dispatch = useDispatch();
   const [active, setActive] = React.useState(true);
@@ -20,7 +20,7 @@ const Login = (props) => {
       alert("비밀번호를 입력해주세요");
       return;
     }
-    dispatch(userActions.loginFB(state.user_id, state.user_pw));
+    dispatch(loginFB(state.user_id, state.user_pw));
   };
 
   const onChange = (e) => {

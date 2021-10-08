@@ -27,7 +27,7 @@ const GlobalStyle = createGlobalStyle`
 }
   *, *::before, *::after {
     box-sizing: border-box;
-    
+    font-family: 'SpoqaHanSansNeo-Regular';
   }
 
   body {
@@ -35,6 +35,7 @@ const GlobalStyle = createGlobalStyle`
     line-height: 1.5;
     background-color: #e9ecef;
   }
+
 `;
 
 export default GlobalStyle;

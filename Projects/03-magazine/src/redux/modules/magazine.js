@@ -6,6 +6,7 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
+  query,
 } from "firebase/firestore";
 import moment from "moment";
 
@@ -64,6 +65,7 @@ export const addMagazineFB = (magazine, file) => {
   return function (dispatch, getState, { history }) {
     const user = getState().user.user;
     const date = moment().format("YYYY-MM-DD hh:mm:ss");
+    const date_sort = moment().format("YYYYMMDDhhmmss");
     const _upload = storage.ref(`image/${file.name}`).put(file);
 
     _upload.then((snapshot) => {
@@ -71,6 +73,7 @@ export const addMagazineFB = (magazine, file) => {
         const newMagazine = {
           ...magazine,
           date: date,
+          date_sort: date_sort,
           like: 0,
           image_url: url,
           user_info: {

@@ -18,7 +18,7 @@ const Magazine = (props) => {
 
   return (
     <>
-      <Grid margin="10px 0 20px">
+      <Grid margin="10px 0">
         <Image src={image_url} is_fade height="300px" />
         <Grid is_flex justify="space-between" margin="10px 0px 7px">
           <Grid is_flex>

@@ -9,7 +9,9 @@ import Magazine from "../components/Magazine";
 import Permit from "../shared/Permit";
 const MagazineList = (props) => {
   const dispatch = useDispatch();
-  const list = useSelector((state) => state.magazine.list);
+  const _list = useSelector((state) => state.magazine.list);
+  const list = _list.sort((a, b) => b.date_sort - a.date_sort);
+
   React.useEffect(() => {
     dispatch(getMagazineFB());
   }, []);
