@@ -1,3 +1,7 @@
+<img src="src/magazine.gif" /><br/>
+
+### <a href="http://midadictionary.s3-website.ap-northeast-2.amazonaws.com/" target="_blank">링크 보러가기</a>
+
 # Magazine
 
 - 항해99 3기 리액트 심화 과정 과제
@@ -14,6 +18,7 @@
 - 반응형 구현
 - 댓글 기능
 - 마이페이지
+- 그 외 기타 오류..
 
 ### 과제 필수 기능
 
