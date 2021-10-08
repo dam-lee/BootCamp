@@ -75,7 +75,7 @@ export const addMagazineFB = (magazine, file) => {
           image_url: url,
           user_info: {
             user_name: user.user_name,
-            user_profile: user.user_profile,
+            user_profile: url,
             user_id: user.id,
             user_uid: user.uid,
           },

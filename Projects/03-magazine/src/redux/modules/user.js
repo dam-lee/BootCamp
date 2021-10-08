@@ -11,7 +11,6 @@ import {
 
 import { createAction, handleActions } from "redux-actions";
 import { produce } from "immer";
-
 import { setCookie, deleteCookie } from "../../shared/Cookie";
 
 // 1. action type
@@ -48,7 +47,7 @@ const loginFB = (user_id, user_pw) => {
             setUser({
               user_name: user.displayName,
               id: user_id,
-              user_profile: "",
+              // user_profile: "",
               uid: user.uid,
             })
           );
@@ -79,7 +78,7 @@ const signupFB = (user_id, user_pw, user_name) => {
               setUser({
                 user_name: user_name,
                 id: user_id,
-                user_profile: "",
+                // user_profile: "",
                 uid: user.uid,
               })
             );
@@ -110,7 +109,7 @@ const loginCheckFB = () => {
         dispatch(
           setUser({
             user_name: user.displayName,
-            user_profile: "",
+            // user_profile: "",
             id: user.email,
             uid: uid,
           })

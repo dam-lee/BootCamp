@@ -13,7 +13,7 @@ const Button = (props) => {
     is_hover,
     hoverColor,
     hoverBorder,
-
+    disabled,
     children,
     onClick,
   } = props;
@@ -28,6 +28,7 @@ const Button = (props) => {
     is_hover: is_hover,
     hoverColor: hoverColor,
     hoverBorder: hoverBorder,
+    disabled: disabled,
   };
 
   return (
@@ -50,6 +51,7 @@ Button.defaultProps = {
   is_hover: false,
   hoverColor: "#fff",
   hoverBorder: "#fff",
+  disabled: false,
   onClick: () => {},
 };
 
@@ -62,5 +64,8 @@ const ButtonWrap = styled.button`
   ${(props) => (props.bg ? `background-color:${props.bg}` : "")};
   ${(props) => (props.border ? `border:${props.border}` : "")};
   cursor: pointer;
+  ${(props) =>
+    props.disabled &&
+    `background-color:#f8f9fa; color:#ced4da;border:1px solid #ced4da`}
 `;
 export default Button;

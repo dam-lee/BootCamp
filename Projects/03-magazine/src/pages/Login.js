@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { actionCreators as userActions } from "../redux/modules/user";
 const Login = (props) => {
   const dispatch = useDispatch();
-  const [check, setCheck] = React.useState(true);
+  const [active, setActive] = React.useState(true);
   const [state, setState] = React.useState({
     user_id: "",
     user_pw: "",
@@ -24,6 +24,9 @@ const Login = (props) => {
   };
 
   const onChange = (e) => {
+    if (state.user_id !== "" && state.user_pw !== "") {
+      setActive(false);
+    }
     setState({ ...state, [e.target.name]: e.target.value });
   };
   return (
@@ -64,8 +67,8 @@ const Login = (props) => {
           border="1px solid black"
           bg="#000"
           color="#fff"
-          is_disabled={check}
           onClick={onClick}
+          disabled={active}
         >
           로그인
         </Button>

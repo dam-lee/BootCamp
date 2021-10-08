@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { Grid, Image, Text } from "../elements";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 const Magazine = (props) => {
@@ -20,7 +21,10 @@ const Magazine = (props) => {
       <Grid margin="10px 0 20px">
         <Image src={image_url} is_fade height="300px" />
         <Grid is_flex justify="space-between" margin="10px 0px 7px">
-          <Text fontSize="12px">{user_info ? user_info.user_name : ""}</Text>
+          <Grid is_flex>
+            <ProfileImage src={user_info ? user_info.user_profile : ""} />
+            <Text fontSize="12px">{user_info ? user_info.user_name : ""}</Text>
+          </Grid>
           <Text fontSize="12px" color="#adb5bd">
             {date}
           </Text>
@@ -45,5 +49,12 @@ const Magazine = (props) => {
     </>
   );
 };
+
+const ProfileImage = styled.img`
+  width: 30px;
+  height: 30px;
+  margin-right: 6px;
+  border-radius: 50%;
+`;
 
 export default Magazine;

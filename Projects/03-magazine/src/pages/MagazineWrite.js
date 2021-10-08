@@ -11,6 +11,7 @@ const MagazineWrite = (props) => {
   const magazine_list = useSelector((state) => state.magazine.list);
   const preview = useSelector((state) => state.image.image);
   const file = useSelector((state) => state.image.file);
+  const [active, setActive] = React.useState(true);
 
   const is_edit = magazine_id ? true : false;
   const _magazine = is_edit
@@ -28,6 +29,9 @@ const MagazineWrite = (props) => {
   );
 
   const onChange = (e) => {
+    if (state.contents !== "" && state.title !== "") {
+      setActive(false);
+    }
     setState({ ...state, [e.target.name]: e.target.value });
   };
   const onClick = () => {
@@ -35,6 +39,7 @@ const MagazineWrite = (props) => {
       alert("내용을 모두 입력해주세요");
       return;
     }
+
     dispatch(addMagazineFB(state, file));
     setState({ ...state, image_url: "", contents: "", title: "" });
   };
@@ -59,13 +64,13 @@ const MagazineWrite = (props) => {
       </Grid>
       {preview && <Image height="350px" src={preview} />}
 
-      <Grid is_flex margin="10px 0 0">
+      <Grid margin="10px 0 0">
         <Text padding="10px 10px 10px 0px" fontSize="15px">
           제목
         </Text>
         <Input
           name="title"
-          flex="1"
+          width="100%"
           padding="10px"
           placeholder="제목을 입력해주세요"
           onChange={onChange}
@@ -90,6 +95,7 @@ const MagazineWrite = (props) => {
         color="#fff"
         hoverColor="#e03131"
         onClick={is_edit ? onUpdate : onClick}
+        disabled={active}
       >
         {is_edit ? "수정하기" : "작성하기"}
       </Button>

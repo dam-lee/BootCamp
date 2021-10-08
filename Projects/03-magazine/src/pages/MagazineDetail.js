@@ -12,23 +12,22 @@ const MagazineDetail = (props) => {
   const magazine_id = props.match.params.id;
   const dispatch = useDispatch();
   const login_user = useSelector((state) => state.user.user);
+
   // 상세 내용 가져오는 것을 리덕스에 저장할 필요가 없어보임.
   const list = useSelector((state) => state.magazine.list);
 
   const index = list.findIndex((i) => i.id === magazine_id);
   const magazine = list[index];
-  // 작성한 사람만 수정 삭제가 가능하게
+  console.log("magazine = ", magazine);
+  const [state, setState] = React.useState(magazine ? magazine : null);
 
+  // 작성한 사람만 수정 삭제가 가능하게
   const edit_user =
     login_user && magazine
       ? magazine.user_info.user_id === login_user.id
       : ""
       ? true
       : false;
-
-  const [state, setState] = React.useState(magazine ? magazine : null);
-  if (state) {
-  }
 
   const onDelete = () => {
     dispatch(deleteMagazineFB(magazine_id));
