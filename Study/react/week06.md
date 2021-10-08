@@ -719,3 +719,215 @@ export { actionCreators };
 // redux - modules
 import { produce } from "immer"; // import 불러옴
 ```
+
+## reduce() 고차 함수 이해하기
+
+```javascript
+// reduce() 배열의 고차함수. 누산한다. 어떤 연산한 것에 또 연산한다.
+// reduce 의 첫번째 인자는 누산된 값, 두번째는 현재 값
+
+// mdn 예제 더하기
+const array1 = [1, 2, 3, 4];
+const reducer = (previousValue, currentValue) => previousValue + currentValue;
+// previousValue 에는 첫번째 1이 들어가고 두번째 2 이런식으로 돌면서 들어감
+// currentValue 는 현재 값이다.
+// 1. 맨처음 돌때 previousValue 연산된 값이 없는데 currentValue 현재값 1이 들어와서 previousValue는 1이 된다.
+// 2. previousValue는 연산된 값 1이 되었고 두번째 돌면서 currentValue는 2가 들어와서 1+2가 되어 3의 연산 값이 previousValue 에 들어간다.
+// 3. previousValue 에는 연산 값 3이 되었고 배열이 돌면서 currentValue에는 3이들어와서 3+3 은 6이 되어 previousValue 에 연산 결과값 6이 들어간다.
+// 4. previousValue 연산값 6이 되었고 currentValue에는 4가 들어와서 10의 연산 결과값이 previousValue 에 들어간다.
+
+// 1 + 2 + 3 + 4
+console.log(array1.reduce(reducer));
+// expected output: 10
+
+// 5 + 1 + 2 + 3 + 4
+// 배열 1부터 4까지 더한 값에 5를 최종으로 한번 더 더해줌. 그래서 15가 나옴
+console.log(array1.reduce(reducer, 5));
+// expected output: 15
+```
+
+### firebase에서 받는 데이터를 reduce() 고차 함수로 받기
+
+```javascript
+// firebase에서 받아야 하는 데이터 형태.
+const initialPost = {
+  id: 0,
+  user_info: {
+    user_name: "mida",
+    user_profile:
+      "https://midadictionary.s3.ap-northeast-2.amazonaws.com/cat.jpg",
+  },
+  image_url: "https://midadictionary.s3.ap-northeast-2.amazonaws.com/cat.jpg",
+  contents: "루이군요!",
+  comment_cnt: 10,
+  insert_dt: "2021-09-30 10:00:00",
+};
+
+//
+const getPostFB = () => {
+  return function (dispatch, getState, { history }) {
+    const postDB = firestore.collection("post");
+    postDB.get().then((docs) => {
+      let post_list = [];
+
+      // firebase에서 가져온 데이터를 forEach 돌린다.
+      docs.forEach((doc) => {
+        let _post = doc.data();
+        // Object.keys() 는 key값들을 배열로 만들어준다.
+        // ['contents', 'comment_cnt'...] <- 이런식으로
+        let post = Object.keys(_post).reduce(
+          (acc, cur) => {
+            if (cur.indexOf("user_") !== -1) {
+              return {
+                ...acc,
+                user_info: { ...acc.user_info, [cur]: _post[cur] },
+              };
+            }
+            return { ...acc, [cur]: _post[cur] };
+          },
+          { id: doc.id, user_info: {} }
+        );
+        post_list.push(post);
+        dispatch(setPost(post_list));
+      });
+    });
+  };
+};
+```
+
+> ### 코드 정리
+>
+> 1. <code>const postDB = firestore.collection("post"); </code> firestore에서 데이터를 받아온다.
+> 2. <code>postDB.get().then((docs) => { let post_list = []; docs.forEach((doc) => { 수행할 작업 }}</code> firestore에서 받은 데이터를 우리가 알아볼 수 있는 데이터 형태로 변환하기 위해 <code>forEach</code>로 돌린다.
+> 3. <code>let \_post = doc.data();</code> `_post` 변수에 받아온 데이터를 담고, 우리가 원하는 객체 형태로 바꿔준다.
+> 4. <code>Object.keys(\_post)</code> Object.keys() 메소드를 통해서 key값들을 배열로 만들어준다. (예: 'contents', 'comment_cnt' ...등등 처럼 배열 형태로 변환)
+> 5. <code> Object.keys(\_post).reduce((연산값, 현재값) => {}, 처음 초기값 설정. 내가 원하는것은 {} 객체 형태이기 때문에 {}로 담아줌.) </code><br/>
+>    초기 값에 <code>{ id: doc.id, user_info: {} } </code>를 담아준다.<br/>
+>    id는 데이터에서 받아오고 user_info는 객체로 또 받아와야 하기 때문에 초기 설정을 해준다.
+> 6. <code>if (cur.indexOf("user*") !== -1)</code> 문을 통해서 현재 값이 user* 로 시작되는 값이 있을 경우의 조건처리를 해준다. (-1은 값이 없다이기 때문에 !== 을 해줘서 있을 경우로 만들어줌)
+> 7. <code> return {...acc, user_info: { ...acc.user_info, [cur]: \_post[cur] },}; </code> 으로 연산값을 풀어서 만약 user_name이 들어오면 key에 user_name을 넣고, value값으로 \_post[cur] 받아온 데이터의 user_name을 value값으로 설정. 그리고 다음번 연산을 시작함.
+> 8. 다음으로 들어오는 <code>user_profile</code> 도 if문에 해당되기 때문에 key값을 user_profile 로 넣고, value값은 \_post[cur] 통해 firebase에서 받아온 user_profile 의 값을 value값으로 넣음
+> 9. if문에 해당되는 조건들이 처리되고 나면 <code>return { ...acc, [cur]: \_post[cur] };</code> 를 통해서 다음 연산을 수행함
+
+### 컴포넌트에 state로 상태를 관리하는데 리덕스에서 값이 변경될 경우 컴포넌트는 다시 재 렌더링 되면서 DOM이 먼저 그려진 후, 그 다음 순서로 리덕스에서 변경된 상태값을 참조하는 건가?
+
+미다님 안녕하세요 😇 어제 redux와 react-redux를 사용하였을 때 리렌더링이 어떻게 진행되는지에 대해 저와 대화를 나눈 것으로 기억을 하고 있어요! 제가 이야기를 하면서 뭔가 찝찝하다는 생각이 들어서 다시 문서를 찾아보았는데요, 다음과 같은 순서로 이루어져 있더라구요! react-redux에서 제공하는 useSelector Hook을 컴포넌트 안에서 사용하면, 그 컴포넌트는 리덕스 스토어를 자동으로 구독한다고 합니다! 이후 액션이 디스패치되면 스토어를 구독한 '모든 useSelector'가 다시 호출이 되어요. 그리고 업데이트 '전'의 결과값과 업데이트 '후'의 결과값을 비교하여 그 값이 '다르면' 리렌더링을 진행한다고 합니다!
+리덕스 스토어 내부에서 userReducer와 postReducer가 있을 때, userReducer에 관한 액션이 디스패치 되어도 post 관련 컴포넌트에서 useSelector를 사용하였다면 그쪽에서도 호출이 되는 것 같네요! 다만 유저의 정보가 변하였기 때문에 post 관련 컴포넌트에서는 업데이트 '전' 값과 업데이트 '후 값이 같기 때문에 리렌더링이 일어나지 않네용!
+
+### 포스트 작성
+
+- yarn add moment // javascript에서 날짜와 시간을 편하게 다룰 수 있는 패키지.
+- import moment from "moment";
+- insert_dt: moment().format("YYYY-MM-DD hh:mm:ss")
+
+#### firebase Storage
+
+- 이미지나 파일을 저장하는 클라우드 저장소 (아마존 s3와 비슷)
+- ref로 값을 가져온다 <code>fileInput.current.files[0];</code>
+
+> 포스트를 작성하고 목록으로 되돌아 왔을 때, 꼭 파이어 스토어에서 다시 데이터를 가져올 필요가 없다. 그냥 추가한 데이터만 리덕스에 추가해주면 요청을 하나 덜 보낸다.
+
+1. 로그인 한 후에만 create에 접근하도록 권한 설정
+
+```javascript
+const is_login = useSelector((state) => state.user.is_login);
+if (!is_login) {
+  return (
+    <Grid margin="100px 0px" padding="16px" center>
+      <Text size="32px" bold>
+        앗! 잠깐!
+      </Text>
+      <Text size="16px">로그인 후에만 글을 쓸 수 있어요!</Text>
+      <Button
+        _onClick={() => {
+          history.replace("/login");
+        }}
+      >
+        로그인 하러가기
+      </Button>
+    </Grid>
+  );
+}
+```
+
+## Devounce 와 Throttle
+
+- onChange가 일어날때마다 api를 호출하면 엄청난 리소스가 발새앟기 때문에 이를 막기 위한 방법
+- 상황에 따라 맞는걸 사용한다.
+- 블로그 중에서 스크롤을 내릴때마다 프로그래스바가 채워지는 사이트의 경우, Devounce 로 만드면, 스크롤이 그만 일어날때까지 프로그래스바를 채우지 않는다.
+- 스크롤을 막 내리다보면, 어느 순간 한번에 확 차는 모습이 된다. 이럴경우에는 Throttle이 상황에 맞는 이벤트이다 (더 스무스하게 됨)
+- 연관 검색어 같은 경우 유저가 입력한 값에서 관련된 내용을 입력하는데, 감사합니다에서 가까지만 쳤을 경우, 이럴때 검색이 타이핑이 완전이 끝난 시점에 무언가 일어나면 되기 때문에 그럴경우 Devounce 를 사용하는게 적절하다.
+
+### Devounce
+
+- 일정 시간을 기다렸다가 이벤트를 수행한다. 일정 시간 내에 같은 이벤트가 또 들어오면 이전 요청은 취소한다.
+
+### Throttle
+
+- 일정 시간 동안 일어난 이벤트를 모아서 주기적으로 1번씩 실행한다.
+- 0초에서 ㄱ을 검색하고 1초가 끝나기 전에 ㄱ,ㅏ,ㅁ이 들어오면, Devounce는 1초 안의 내용들이 검색에서 취소되지만, Throttle은 1초 내에 검색된 부분을 갖고 있다가 마지막에 모아서 가장 최근꺼를 실행한다.
+
+## lodash로 이벤트 관리
+
+- Lodash는 자바스크립트 유틸리티 라이브러리 이다. https://lodash.com/
+- 배열 관리부터 모듈화, 성능 향상과 관련된 것까지 많은 기능을 제공한다. (많이 이용함)
+- yarn add lodash
+
+```javascript
+import _ from "lodash"; // _ 안에 Devounce 와 Throttle 들어있다.
+
+// debounce
+const debounce = _.debounce((e) => {
+  console.log(e.target.value);
+}, 1000);
+
+// throttle
+const throttle = _.throttle((e) => {
+  console.log(e.target.value);
+}, 1000);
+```
+
+### 함수형 컴포넌트의 useCallback
+
+- 리렌더링 되면 상수가 다시 렌더링 된다는건 상수로 만든 것들도 모두 초기화 된다는 것이다.
+- debounce는 1초 뒤에 동작해야되는데 초기화가 되서 제 기능을 동작하지 못한다.(throttle 도 마찬가지)
+- 이런 문제를 해결하기 위해 useCallback 함수를 쓴다.
+
+```javascript
+// React.useCallback() 은 함수를 어디다 저장해놓고, 컴포넌트가 리렌더링이 되더라도 함수를 초기화 하지 않게 해준다. (useCallback이 저장해서 사용하게 해준다.)
+const keyPress = React.useCallback();
+// React.useCallback(함수, [바뀔 무언가]);
+
+// 사용법
+const debounce = _.debounce((e) => {
+  console.log("debounce = ", e.target.value);
+}, 1000);
+
+// throttle
+const throttle = _.throttle((e) => {
+  console.log("throttle = ", e.target.value);
+}, 1000);
+const keyPress = React.useCallback(debounce, []);
+// debounce
+
+const onChange = (e) => {
+  // console.log(e.target.value);
+  keyPress(e);
+  setText(e.target.value);
+};
+```
+
+// 숙제
+알림 페이지 유저 닉네임과 텍스트
+알림 버튼 클릭하면 들어오기 로그인 하기 전에는 들어갈 수 없다.
+
+게시글 수정하기
+
+1. 수정할 페이지가 있어야함.
+2. 수정 버튼을 클릭하면 {post_id} 페이지로 이동
+3. 수정페이지에는 게시물의 내용이 미리 채워져 있어야 함.
+4. 미리보기 이미지는 리덕스 프리뷰에 없어도 된다. ( 컴포넌트 단에서 충분히 조절 가능 )
+5. props.match.params.post_id 로 리덕스에 저장해둔 포스트 내용을 찾는다.
+6. 강사님은 업데이트 컴포넌트 따로 안만듬.
+7. 수정하기 기능 만들기. 리덕스에 update 액션을 만들어서 한다. firestore에 업데이트할때 update 쓴다.
+8. 수정이 끝나면 메인 페이지로 이동한다.

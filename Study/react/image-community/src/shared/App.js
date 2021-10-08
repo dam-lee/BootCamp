@@ -19,6 +19,8 @@ import Permit from "../shared/Permit";
 import PostCreate from "../pages/PostCreate";
 import CommentList from "../pages/CommentList";
 import PostDetail from "../pages/PostDetail";
+import Notification from "../pages/Notification";
+import Search from "./Search";
 
 function App() {
   const dispatch = useDispatch();
@@ -29,7 +31,7 @@ function App() {
     if (is_session) {
       dispatch(useActions.loginCheckFB());
     }
-  }, []); // [a,b,c] 값들이 업데이트 될때마다 useEffect안에 함수 재실행
+  }); // [a,b,c] 값들이 업데이트 될때마다 useEffect안에 함수 재실행
 
   return (
     <>
@@ -40,8 +42,11 @@ function App() {
           <Route path="/login" exact component={Login} />
           <Route path="/signup" exact component={Signup} />
           <Route path="/create" exact component={PostCreate} />
+          <Route path="/update/:post_id" exact component={PostCreate} />
           <Route path="/comment" exact component={CommentList} />
-          <Route path="/detail" exact component={PostDetail} />
+          <Route path="/detail/:post_id" exact component={PostDetail} />
+          <Route path="/search" exact component={Search} />
+          <Route path="/noti" exact component={Notification} />
         </ConnectedRouter>
       </Grid>
 

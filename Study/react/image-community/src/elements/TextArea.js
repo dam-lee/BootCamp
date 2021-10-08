@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const TextArea = (props) => {
-  const { margin, padding, rows, resize, children } = props;
+  const { value, margin, padding, rows, resize, onChange } = props;
   const styles = {
     margin: margin,
     padding: padding,
@@ -10,18 +10,23 @@ const TextArea = (props) => {
     resize: resize,
   };
   return (
-    <TextBox rows={rows} {...styles}>
-      {children}
-    </TextBox>
+    <TextBox
+      rows={rows}
+      {...styles}
+      onChange={onChange}
+      value={value}
+    ></TextBox>
   );
 };
 
 TextArea.defaultProps = {
   children: null,
-  margin: 0,
-  padding: 0,
+  margin: "0px",
+  padding: "10px",
   rows: 5,
   resize: "none",
+  value: "",
+  onChange: () => {},
 };
 
 const TextBox = styled.textarea`
@@ -29,7 +34,7 @@ const TextBox = styled.textarea`
   box-sizing: border-box;
   resize: ${(props) => (props.resize ? props.resize : "none")};
   margin: ${(props) => (props.margin ? props.margin : 0)};
-  padding: ${(props) => (props.padding ? props.padding : 0)};
+  padding: ${(props) => (props.padding ? props.padding : "10px")};
 `;
 
 export default TextArea;

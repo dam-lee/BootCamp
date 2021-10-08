@@ -1,27 +1,27 @@
 import React from "react";
-import { Grid, Image, Text } from "../elements";
+import { Grid, Image, Text, Button } from "../elements";
 
 const Post = (props) => {
+  console.log("props = ", props);
+
   return (
     <>
+      {/* grid의 자식으로 넘어간다 */}
+      <Grid is_flex padding="16px">
+        <Grid is_flex justify="start">
+          <Image shape="circle" src={props.src} />
+          <Text bold>{props.user_info.user_name}</Text>
+        </Grid>
+        <Text>{props.insert_dt}</Text>
+      </Grid>
       <Grid padding="16px">
-        {/* grid의 자식으로 넘어간다 */}
-        <Grid is_flex>
-          <Grid is_flex justify="start">
-            <Image shape="circle" src={props.src} />
-            <Text bold>{props.user_info.user_name}</Text>
-          </Grid>
-          <Text>{props.insert_dt}</Text>
-        </Grid>
-        <Grid padding="16px">
-          <Text>{props.contents}</Text>
-        </Grid>
-        <Grid>
-          <Image shape="rectangle" src={props.src} />
-        </Grid>
-        <Grid padding="16px">
-          <Text bold>댓글 {props.comment_cnt}개</Text>
-        </Grid>
+        <Text>{props.contents}</Text>
+      </Grid>
+      <Grid>
+        <Image shape="rectangle" src={props.image_url} />
+      </Grid>
+      <Grid padding="16px">
+        <Text bold>댓글 {props.comment_cnt}개</Text>
       </Grid>
     </>
   );

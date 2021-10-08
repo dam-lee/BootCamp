@@ -1,6 +1,6 @@
 import React from "react";
 import Comment from "../components/Comment";
-import { Grid, Text } from "../elements";
+import { Grid } from "../elements";
 
 const CommentList = () => {
   return (

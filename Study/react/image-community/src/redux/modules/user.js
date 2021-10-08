@@ -1,6 +1,6 @@
 import { createAction, handleActions } from "redux-actions";
 import { produce } from "immer";
-import { setCookie, getCookie, deleteCookie } from "../../shared/Cookie";
+import { setCookie, deleteCookie } from "../../shared/Cookie";
 
 // 회원가입, 로그인 정보를 firebase에 등록
 import { auth } from "../../shared/firebase";
@@ -16,6 +16,7 @@ const SET_USER = "SET_USER";
 const logOut = createAction(LOGOUT, (user) => ({ user }));
 const getUser = createAction(GET_USER, (user) => ({ user }));
 const setUser = createAction(SET_USER, (user) => ({ user }));
+
 // 리듀서를 handleActions로 했을 때
 // const reducer = handleActions({ [LOGIN]: (state, action) => {} }, initialState);
 
@@ -26,9 +27,9 @@ const initialState = {
 };
 
 // 유저의 initialState
-const user_initial = {
-  user_name: "mida",
-};
+// const user_initial = {
+//   user_name: "mida",
+// };
 
 // 미들웨어 만들기
 const loginAction = (user) => {
@@ -40,7 +41,6 @@ const loginAction = (user) => {
 
 const signupFB = (id, pwd, name) => {
   return function (dispatch, getState, { history }) {
-    console.log("signupFB");
     auth
       .createUserWithEmailAndPassword(id, pwd)
       .then((user) => {
@@ -84,7 +84,6 @@ const loginFB = (id, pw) => {
     auth
       .signInWithEmailAndPassword(id, pw)
       .then((user) => {
-        console.log("login user == ", user);
         dispatch(
           setUser({
             user_name: user.user.displayName,

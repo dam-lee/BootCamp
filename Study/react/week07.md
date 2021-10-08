@@ -274,7 +274,89 @@ export default PostDetail;
 
 ## 😳무한 스크롤과 댓글 알람에서 중요한 것!
 
-- 함수형 컴포넌트에서 이벤트를 어떻게 구독시켰고, 어떻게 해제시켰는지.
-- 무한 스크롤시 주의할 점은 스크롤을 내릴때 이 데이터를 파이어 스토어에서 데이터를 다 가져오지 않았는데, 또 데이터를 가져오지 않도록 주의
-- 데이터 요청을 다시 보내지 못하게 막은 부분 기억
-- 데이터 형식 맞추는 것
+- 함수형 컴포넌트에서 이벤트
+
+# SEO
+
+- 검색엔진 최적화
+- 네이버나 구글같은 검색 엔진에 뭔가를 검색했을때, 내가 만든 사이트가 검색 결과에 더 잘보이게 하는 것.
+
+1. 검색을 하면 검색 엔진이 사이트 내용물(메타태그, html 내용 등)을 한번 크롤링한다.
+2. 검색 엔진이 인덱스(색인)같은걸 만든다.
+3. 누간가 검색을 하면, 검색 결과를 뿌려준다.
+
+> 검색 엔진 최적화는 검색 엔진이 내 사이트를 크롤링 할 때, 정보를 더 잘 가져갈 수 있도록 해주는 과정을 검색 엔진 최적화 라고 한다
+
+# React 에서 검색 엔진 최적화
+
+1. meta-data 넣는다.
+2. pre-rendering
+3. server side redering
+
+> 구글 검색 엔진은 자바스크립트를 실행할 수 있다.
+> 내용물을 가져갈 수 있다. 검색 엔진마다 크롤링을 해가는 방법이 다 다르다.
+
+## Pre-rendering
+
+- 빌드할 때 미리 특정 페이지를 렌더링해서 html 파일을 만들어 둔다.
+- 검색 엔진이 크롤링 하러 사이트에 들어왔을 때, 빈 껍데기 html 파일 대신 내용물을 가져갈 수 있다.
+
+> react-snap
+> yarn add --dev react-snap // dev모드(개발)에서만 실행한다.
+
+# Meta tag
+
+- 메타태그는 웹페이지의 제목이나 이미지, 간단한 설명을 검색엔진에 알려준다.
+- 리액트는 기본적으로 index.html 파일 한개이기 때문에 페이지별로 메타태그를 나누기 어려웠다.
+- 그래서 페이지를 돌아다닐때 라우터마다 다른 메타태그를 넣어주기 위한 패키지를 설치한다. react-helmet
+
+```javascript
+yarn add react-helmet
+```
+
+# 성능 지표 보기
+
+- webCitals 은 cra를 통해 기본 패키지로 추가된다
+- webCitals 은 웹 사이트의 상태를 체크해준다. (예: 맨 첫번째 페이지가 로드되는데 얼마나 걸렸는지, 리덕스로 데이터를 가져오는데 얼마나 걸렸는지 등)
+
+```javascript
+const reportWebVitals = (onPerfEntry) => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import("web-vitals").then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+
+      //버튼을 클릭했을때 이벤트의 시간소요도 등을 체크 할 수 있다.
+      getFID(onPerfEntry); // first input delay _ 웹페이지의 반응. 이벤트가 시작되는데 얼마나 시간 소요
+
+      getFCP(onPerfEntry); // first contentful paint _ 브라우저가 화면에 그려지기까지의 특정 시간 측정
+
+      // 예를들어 p태그랑 h1태그가 있으면, h1을 더 커다랗고 중요하다고 판단
+      getLCP(onPerfEntry); // largest contentful paint _ 웹페이지에서 제일 커다란 덩어리의 시간 소요를 체크
+      getTTFB(onPerfEntry); // time to first byte _ 브라우저가 페이지에 들어갈 내용의 가장 1번째 byte 걸리는 시간
+    });
+  }
+};
+
+export default reportWebVitals;
+```
+
+# 렌더링 횟수 줄이기
+
+- 부모가 바뀔 때 자식 컴포넌트도 렌더링되는데 이 방법을 막기 위한 방법
+- <code>React.memo</code>
+
+# 고민할 것
+
+- 사이트 로딩 속도 개선
+- api 중복 호출 방지
+- 오류 나지 않도록 api 호출 전후처리
+- 오류가 나도 빈화면을 보지 않도록 에러 페이지 만들어주기
+- 오래 걸리는 비동기 작업이 있다면 스피너를 띄워주기 (이미지 지연 로딩 등)
+
+## 이미지 용량 줄이기
+
+- 프론트, 백엔드 모두 처리가 필요하다.
+- 작은 이미지 같은 경우 화질이 좋을 필요가 없다. (프로필 사진)
+- 이미지를 리사이징해서 저장할 수 있다.
+- 상황에 맞는 이미지를 가져다가 써야한다.
+- css로 image sprite 할 수 있다.
