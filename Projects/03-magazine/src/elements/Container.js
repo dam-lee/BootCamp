@@ -15,9 +15,11 @@ const ContainerWrap = styled.div`
   width: 35vw;
   height: 100%;
   min-height: 90vh;
+  max-height: 90vh;
   margin: 5vh auto;
   padding: 0;
   background-color: #fff;
   box-shadow: 5px 5px 5px 5px #dee2e6;
+  overflow-y: scroll;
 `;
 export default Container;
