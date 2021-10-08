@@ -7,6 +7,7 @@ import { FaPlus } from "react-icons/fa";
 import { getMagazineFB } from "../redux/modules/magazine";
 import Magazine from "../components/Magazine";
 import Permit from "../shared/Permit";
+
 const MagazineList = (props) => {
   const dispatch = useDispatch();
   const _list = useSelector((state) => state.magazine.list);

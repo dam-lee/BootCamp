@@ -15,19 +15,20 @@ import { history } from "./redux/configureStore";
 
 // 로그인 체크 유무 (새로고침시 App.js부터 시작된다. 라우터가 여기에 있기 때문)
 import { useDispatch } from "react-redux";
-import { loginCheckFB } from "./redux/modules/user";
+import { actionCreators as userActions } from "./redux/modules/user";
 import { apiKey } from "./shared/firebase";
 
 function App() {
   const dispatch = useDispatch();
   const _session_key = `firebase:authUser:${apiKey}:[DEFAULT]`;
+
   // 세션 스토리지가 있는지 없는지 확인한다.
   const is_session = sessionStorage.getItem(_session_key) ? true : false;
   React.useEffect(() => {
     // 로그인이 되어있는지 체크한다.
     // session의 여부로 판단. header에서 해도 상관없다고함
     if (is_session) {
-      dispatch(loginCheckFB());
+      dispatch(userActions.loginCheckFB());
     }
   }, []);
   return (

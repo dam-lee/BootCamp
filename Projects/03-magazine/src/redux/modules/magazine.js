@@ -6,7 +6,6 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
-  query,
 } from "firebase/firestore";
 import moment from "moment";
 
