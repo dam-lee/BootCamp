@@ -1,25 +1,43 @@
 import React from "react";
 import { Grid, Image, Text } from "../elements";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 const Magazine = (props) => {
-  const { image_url, title, contents, user_name, like } = props;
+  const { image_url, title, contents, date, like, user_info } = props;
+
+  // 좋아요 기능 해야함..
+  const [state, setState] = React.useState({ is_like: false, like: like });
+
+  const onLikie = () => {
+    setState({
+      ...state,
+      is_like: !state.is_like,
+      like: !state.is_like ? state.like + 1 : state.like - 1,
+    });
+  };
+
   return (
     <>
       <Grid margin="10px 0 20px">
         <Image src={image_url} is_fade height="300px" />
         <Grid is_flex justify="space-between" margin="10px 0px 7px">
-          <Text fontSize="12px">{user_name}</Text>
+          <Text fontSize="12px">{user_info ? user_info.user_name : ""}</Text>
           <Text fontSize="12px" color="#adb5bd">
-            2021-10-07 10:00:00
+            {date}
           </Text>
         </Grid>
         <Grid is_flex justify="space-between" margin="10px 0px 7px">
           <Text fontSize="16px" bold>
             {title}
           </Text>
-          <Grid>
-            <FaHeart />
-            {like}
+          <Grid onClick={onLikie}>
+            <Text fontSize="12px">
+              {state.is_like ? (
+                <FaHeart fontSize="16px" />
+              ) : (
+                <FaRegHeart fontSize="16px" />
+              )}
+              {state.like}개
+            </Text>
           </Grid>
         </Grid>
         <Text light>{contents}</Text>

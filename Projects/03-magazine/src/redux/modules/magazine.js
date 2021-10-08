@@ -1,4 +1,4 @@
-import { db } from "../../shard/firebase";
+import { db, storage } from "../../shared/firebase";
 import {
   collection,
   doc,
@@ -7,7 +7,7 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { useHistory } from "react-router";
+import moment from "moment";
 
 const GET_MAGAZINE = "magazine/GET_MAGAZINE";
 const ADD_MAGAZINE = "magazine/ADD_MAGAZINE";
@@ -39,11 +39,11 @@ export function getMagazine(list) {
 export function addMagazine(magazine) {
   return { type: ADD_MAGAZINE, magazine };
 }
-export function updateMagazine(magazine_id, magazine) {
-  return { type: UPDATE_MAGAZINE, magazine_id, magazine };
+export function updateMagazine(index, magazine) {
+  return { type: UPDATE_MAGAZINE, index, magazine };
 }
-export function deleteMagazine(magazine) {
-  return { type: DELETE_MAGAZINE, magazine };
+export function deleteMagazine(index) {
+  return { type: DELETE_MAGAZINE, index };
 }
 
 // 미들웨어 함수 만들기
@@ -60,27 +60,52 @@ export const getMagazineFB = () => {
   };
 };
 
-export const addMagazineFB = (magazine) => {
-  return async function () {
-    await addDoc(collection(db, "magazine"), magazine);
+export const addMagazineFB = (magazine, file) => {
+  return function (dispatch, getState, { history }) {
+    const user = getState().user.user;
+    const date = moment().format("YYYY-MM-DD hh:mm:ss");
+    const _upload = storage.ref(`image/${file.name}`).put(file);
+
+    _upload.then((snapshot) => {
+      snapshot.ref.getDownloadURL().then((url) => {
+        const newMagazine = {
+          ...magazine,
+          date: date,
+          like: 0,
+          image_url: url,
+          user_info: {
+            user_name: user.user_name,
+            user_profile: user.user_profile,
+            user_id: user.id,
+            user_uid: user.uid,
+          },
+        };
+        addDoc(collection(db, "magazine"), newMagazine);
+        history.push("/");
+      });
+    });
   };
 };
 
 export const updateMagazineFB = (magazine_id, magazine) => {
-  return async function (dispatch, getState) {
+  return async function (dispatch, getState, { history }) {
     const getdata = doc(db, "magazine", magazine_id);
     await updateDoc(getdata, magazine);
-    dispatch(updateMagazine(magazine_id, magazine));
+    const docRef = getState().magazine.list;
+    const index = docRef.findIndex((i) => i.id === magazine_id);
+    dispatch(updateMagazine(index, magazine));
+    history.replace("/");
   };
 };
 
 export const deleteMagazineFB = (magazine_id) => {
-  return async function (dispatch, getState) {
+  return async function (dispatch, getState, { history }) {
     const docref = doc(db, "magazine", magazine_id);
     await deleteDoc(docref);
-    const list = getState().magazine.list;
-    const newlist = list.filter((item) => item.id !== magazine_id);
-    dispatch(deleteMagazine(newlist));
+    const docRef = getState().magazine.list;
+    const index = docRef.findIndex((i) => i.id === magazine_id);
+    dispatch(deleteMagazine(index));
+    history.push("/");
   };
 };
 
@@ -95,10 +120,20 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, list: new_list };
     }
     case "magazine/UPDATE_MAGAZINE": {
-      return state;
+      const index = action.index;
+      const _list = action.magazine;
+      const newlist = state.list.map((item, idx) => {
+        return idx === index
+          ? { ...item, contents: _list.contents, title: _list.title }
+          : item;
+      });
+      return { ...state, list: newlist };
     }
     case "magazine/DELETE_MAGAZINE": {
-      return { list: action.magazine };
+      const newlist = state.list.filter((_item, idx) => {
+        return idx !== action.index;
+      });
+      return { ...state, list: newlist };
     }
     default:
       return state;

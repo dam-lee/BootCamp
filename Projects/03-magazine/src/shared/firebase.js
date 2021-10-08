@@ -1,7 +1,11 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
+import "firebase/compat/database";
+import "firebase/compat/analytics";
+import "firebase/compat/storage";
 import { getFirestore } from "firebase/firestore";
-
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,10 +20,13 @@ const firebaseConfig = {
   appId: "1:486918142366:web:9ab3a2a9a16bd9e23e7e8f",
   measurementId: "G-KLGN4GPK39",
 };
-// 파이어베이스를 호출하는 순간에 쓸 수 있도록 초기화 할 거라는 뜻
-initializeApp(firebaseConfig);
-// Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
 
+firebase.initializeApp(firebaseConfig);
+
+const apiKey = firebaseConfig.apiKey;
+const auth = firebase.auth();
+const firestore = firebase.firestore();
+const storage = firebase.storage();
+
+export { apiKey, auth, firestore, storage };
 export const db = getFirestore();

@@ -13,6 +13,7 @@ const Button = (props) => {
     is_hover,
     hoverColor,
     hoverBorder,
+
     children,
     onClick,
   } = props;
@@ -28,6 +29,7 @@ const Button = (props) => {
     hoverColor: hoverColor,
     hoverBorder: hoverBorder,
   };
+
   return (
     <>
       <ButtonWrap {...styles} onClick={onClick}>

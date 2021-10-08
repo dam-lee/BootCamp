@@ -1,42 +1,64 @@
 import React from "react";
-import { useHistory } from "react-router";
-import { useDispatch } from "react-redux";
+import { history } from "../redux/configureStore";
+import { useDispatch, useSelector } from "react-redux";
 import { addMagazineFB, updateMagazineFB } from "../redux/modules/magazine";
-import { Grid, Input, Text, Image, Button } from "../elements";
+import { Grid, Input, Text, Image, Button, Upload } from "../elements";
+import { FaArrowLeft } from "react-icons/fa";
 
 const MagazineWrite = (props) => {
-  const history = useHistory();
+  const magazine_id = props.match.params.id;
   const dispatch = useDispatch();
-  const [state, setState] = React.useState({
-    image_url:
-      "http://img.khan.co.kr/news/2020/10/16/2020101601001687000138341.jpg",
-    contents: "",
-    title: "",
-    user_name: "이미다",
-  });
+  const magazine_list = useSelector((state) => state.magazine.list);
+  const preview = useSelector((state) => state.image.image);
+  const file = useSelector((state) => state.image.file);
+
+  const is_edit = magazine_id ? true : false;
+  const _magazine = is_edit
+    ? magazine_list.find((list) => list.id === magazine_id)
+    : null;
+
+  const [state, setState] = React.useState(
+    _magazine
+      ? {
+          image_url: _magazine.image_url,
+          contents: _magazine.contents,
+          title: _magazine.title,
+        }
+      : { image_url: "", contents: "", title: "" }
+  );
+
   const onChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
   const onClick = () => {
-    dispatch(addMagazineFB(state));
-    history.push(`/`);
+    if (preview === "" || state.contents === "" || state.title === "") {
+      alert("내용을 모두 입력해주세요");
+      return;
+    }
+    dispatch(addMagazineFB(state, file));
+    setState({ ...state, image_url: "", contents: "", title: "" });
   };
   const onUpdate = () => {
-    dispatch(updateMagazineFB(state.id, state));
+    dispatch(updateMagazineFB(magazine_id, state));
+    setState({ ...state, image_url: "", contents: "", title: "" });
   };
+
   return (
     <Grid padding="15px 20px 25px">
-      <Text fontSize="24px" bold>
-        작성하기
-      </Text>
       <Grid>
-        <Input type="file" placeholder="" />
+        <Button padding="0px" onClick={() => history.goBack()}>
+          <FaArrowLeft fontSize="16px" />
+        </Button>
       </Grid>
-      {state.image_url !== "" && (
-        <Grid>
-          <Image height="350px" src={state.image_url} />
-        </Grid>
-      )}
+      <Text fontSize="24px" bold>
+        {is_edit ? "수정하기" : "작성하기"}
+      </Text>
+
+      <Grid>
+        <Upload />
+      </Grid>
+      {preview && <Image height="350px" src={preview} />}
+
       <Grid is_flex margin="10px 0 0">
         <Text padding="10px 10px 10px 0px" fontSize="15px">
           제목
@@ -56,7 +78,10 @@ const MagazineWrite = (props) => {
           style={{ width: "100%", padding: "10px", resize: "none" }}
           rows="7"
           onChange={onChange}
-        ></textarea>
+          value={state.contents}
+        >
+          {state.contents}
+        </textarea>
       </Grid>
       <Button
         width="100%"
@@ -64,19 +89,9 @@ const MagazineWrite = (props) => {
         bg="#000"
         color="#fff"
         hoverColor="#e03131"
-        onClick={onClick}
+        onClick={is_edit ? onUpdate : onClick}
       >
-        등록하기
-      </Button>
-      <Button
-        width="100%"
-        padding="20px"
-        bg="#000"
-        color="#fff"
-        hoverColor="#e03131"
-        onClick={onUpdate}
-      >
-        수정하기
+        {is_edit ? "수정하기" : "작성하기"}
       </Button>
     </Grid>
   );

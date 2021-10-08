@@ -1,9 +1,12 @@
 import React from "react";
 import {} from "react-redux";
 import { Text, Grid, Input, Label, Button } from "../elements";
-import { emailCheck } from "../shard/regExp";
-
+import { emailCheck } from "../shared/regExp";
+import { useDispatch } from "react-redux";
+import { actionCreators as userActions } from "../redux/modules/user";
 const Signup = (props) => {
+  const dispatch = useDispatch();
+
   const [state, setState] = React.useState({
     user_id: "",
     user_pw: "",
@@ -14,9 +17,24 @@ const Signup = (props) => {
   const onChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
+
   const onClick = () => {
+    // console.log("state == ", state);
     if (!emailCheck(state.user_id)) {
       alert("이메일 형식을 다시 입력해주세요");
+      return;
+    }
+    if (state.user_pw.length < 6) {
+      alert("비밀번호는 6자 이상으로 입력해주세요");
+      return;
+    }
+    if (state.user_pw !== state.user_pwCheck) {
+      alert("비밀번호가 다릅니다. 다시 확인해주세요");
+      return;
+    }
+    if (state.user_name === "") {
+      alert("이름을 입력해주세요.");
+      return;
     }
     if (
       state.user_id !== "" &&
@@ -25,7 +43,9 @@ const Signup = (props) => {
       state.user_pw === state.user_pwCheck &&
       state.user_name !== ""
     ) {
-      alert("모두입력 완료");
+      dispatch(
+        userActions.signupFB(state.user_id, state.user_pw, state.user_name)
+      );
     }
   };
 

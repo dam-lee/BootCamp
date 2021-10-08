@@ -5,5 +5,6 @@ import Grid from "./Grid";
 import Text from "./Text";
 import Image from "./Image";
 import Label from "./Label";
+import Upload from "./Upload";
 
-export { Container, Grid, Button, Input, Text, Image, Label };
+export { Container, Grid, Button, Input, Text, Image, Label, Upload };

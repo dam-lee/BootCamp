@@ -1,10 +1,28 @@
 import React from "react";
 import { Text, Grid, Input, Label, Button } from "../elements";
+import { emailCheck } from "../shared/regExp";
+import { useDispatch } from "react-redux";
+import { actionCreators as userActions } from "../redux/modules/user";
 const Login = (props) => {
+  const dispatch = useDispatch();
+  const [check, setCheck] = React.useState(true);
   const [state, setState] = React.useState({
-    id: "",
-    pw: "",
+    user_id: "",
+    user_pw: "",
   });
+
+  const onClick = () => {
+    if (!emailCheck(state.user_id) || state.user_id === "") {
+      alert("아이디는 이메일 형식으로 입력해주세요");
+      return;
+    }
+    if (state.user_pw === "") {
+      alert("비밀번호를 입력해주세요");
+      return;
+    }
+    dispatch(userActions.loginFB(state.user_id, state.user_pw));
+  };
+
   const onChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
@@ -20,8 +38,8 @@ const Login = (props) => {
             width="100%"
             margin="5px 0px 0px"
             padding="10px"
-            name="id"
-            value={state.id}
+            name="user_id"
+            value={state.user_id}
             onChange={onChange}
             placeholder="아이디를 입력해주세요"
           />
@@ -32,9 +50,9 @@ const Login = (props) => {
             width="100%"
             margin="5px 0px 0px"
             padding="10px"
-            name="pw"
+            name="user_pw"
             type="password"
-            value={state.pw}
+            value={state.user_pw}
             onChange={onChange}
             placeholder="비밀번호를 입력해주세요"
           />
@@ -46,6 +64,8 @@ const Login = (props) => {
           border="1px solid black"
           bg="#000"
           color="#fff"
+          is_disabled={check}
+          onClick={onClick}
         >
           로그인
         </Button>

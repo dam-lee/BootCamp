@@ -1,15 +1,14 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import { useHistory } from "react-router-dom";
+import { history } from "../redux/configureStore";
 import { useDispatch, useSelector } from "react-redux";
 // import { actionCreators as magazineActions } from "../redux/modules/magazine";
-import { Grid } from "../elements";
+import { Grid, Text } from "../elements";
 import { FaPlus } from "react-icons/fa";
 import { getMagazineFB } from "../redux/modules/magazine";
 import Magazine from "../components/Magazine";
-
+import Permit from "../shared/Permit";
 const MagazineList = (props) => {
-  const history = useHistory();
   const dispatch = useDispatch();
   const list = useSelector((state) => state.magazine.list);
   React.useEffect(() => {
@@ -18,21 +17,31 @@ const MagazineList = (props) => {
 
   return (
     <div style={{ position: "relative" }}>
+      <Text padding="15px 0px 0px 20px">
+        <a
+          href="#"
+          style={{ textDecoration: "none", color: "#4dabf7" }}
+          title="GitHub 보러가기"
+        >
+          항해99 3기 _ 이미다
+        </a>
+      </Text>
       {list.map((item) => {
         return (
           <Grid
             key={item.id}
-            padding="15px 20px 25px"
+            padding="5px 20px 25px"
             onClick={() => history.push(`/detail/${item.id}`)}
           >
             <Magazine key={item.id} {...item} />
           </Grid>
         );
       })}
-
-      <CreateButtonWrap onClick={() => history.push(`/create`)}>
-        <FaPlus style={{ fontSize: "22px" }} />
-      </CreateButtonWrap>
+      <Permit>
+        <CreateButtonWrap onClick={() => history.push(`/create`)}>
+          <FaPlus style={{ fontSize: "22px" }} />
+        </CreateButtonWrap>
+      </Permit>
     </div>
   );
 };
