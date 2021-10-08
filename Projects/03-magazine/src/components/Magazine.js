@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Grid, Image, Text } from "../elements";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 const Magazine = (props) => {
-  const { image_url, title, contents, date, like, user_info } = props;
+  const { image_url, title, contents, date, like, user_info, is_login } = props;
 
   // 좋아요 기능 해야함..
   const [state, setState] = React.useState({ is_like: false, like: like });

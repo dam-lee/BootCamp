@@ -17,7 +17,6 @@ const Header = (props) => {
   // 로그인 체크를 해서 리덕스에 데이터를 넣어준다.
 
   const logout = () => {
-    console.log("logout");
     dispatch(userActions.logoutFB({}));
   };
 

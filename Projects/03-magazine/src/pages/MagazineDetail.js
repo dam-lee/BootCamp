@@ -18,7 +18,7 @@ const MagazineDetail = (props) => {
 
   const index = list.findIndex((i) => i.id === magazine_id);
   const magazine = list[index];
-  console.log("magazine = ", magazine);
+
   const [state, setState] = React.useState(magazine ? magazine : null);
 
   // 작성한 사람만 수정 삭제가 가능하게
@@ -81,7 +81,14 @@ const MagazineDetail = (props) => {
         )}
       </Grid>
       <Grid>
-        {state && <Magazine id={magazine_id} key={magazine_id} {...state} />}
+        {state && (
+          <Magazine
+            id={magazine_id}
+            key={magazine_id}
+            is_login={login_user ? true : false}
+            {...state}
+          />
+        )}
       </Grid>
     </Grid>
   );
