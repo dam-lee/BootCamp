@@ -7,6 +7,7 @@ import { Grid } from "../elements";
 import { FaArrowLeft, FaRegTrashAlt, FaRegEdit } from "react-icons/fa";
 import { firestore } from "../shared/firebase";
 import Magazine from "../components/Magazine";
+import CommentList from "./CommentList";
 
 const MagazineDetail = (props) => {
   const magazine_id = props.match.params.id;
@@ -89,6 +90,9 @@ const MagazineDetail = (props) => {
             {...state}
           />
         )}
+      </Grid>
+      <Grid>
+        <CommentList magazine_id={magazine_id} />
       </Grid>
     </Grid>
   );

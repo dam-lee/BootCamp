@@ -7,6 +7,7 @@ import { connectRouter } from "connected-react-router";
 import User from "./modules/user";
 import Magazine from "./modules/magazine";
 import Image from "./modules/image";
+import Comment from "./modules/comment";
 // 9.
 // history를 만든다
 export const history = createBrowserHistory();
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   user: User,
   magazine: Magazine,
   image: Image,
+  comment: Comment,
   // 10.
   // history를 리덕스에 넣어준다.
   // 만든 history와 라우터가 연결되서 스토어에 저장되기 때문에 모듈에서 사용가능

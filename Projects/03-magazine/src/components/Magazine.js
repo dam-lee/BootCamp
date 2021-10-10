@@ -30,7 +30,7 @@ const Magazine = (props) => {
           </Text>
         </Grid>
         <Grid is_flex justify="space-between" margin="10px 0px 7px">
-          <Text fontSize="16px" bold>
+          <Text fontSize="16px" bold flex="1">
             {title}
           </Text>
           <Grid onClick={onLikie}>
