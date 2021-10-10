@@ -1,7 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { history } from "../redux/configureStore";
 import Comment from "../components/Comment";
-import { Button, Grid, Input } from "../elements";
+import { Button, Grid, Input, Text } from "../elements";
 import { addCommentFB, getCommentFB } from "../redux/modules/comment";
 
 const CommentList = (props) => {
@@ -40,6 +41,14 @@ const CommentList = (props) => {
 
   return (
     <>
+      {!is_login && (
+        <Grid margin="30px 0px" onClick={() => history.push(`/login`)}>
+          <Text flex="1" fontSize="12px" color="#339af0">
+            로그인 후 댓글을 남겨보세요!
+          </Text>
+        </Grid>
+      )}
+
       {is_login && (
         <Grid is_flex margin="30px 0px 0px">
           <Input
@@ -49,6 +58,7 @@ const CommentList = (props) => {
             value={state.comment}
             placeholder="댓글을 입력해주세요"
             onChange={onChange}
+            onSubmit={onClick}
           />
           <Button
             padding="8px 15px"

@@ -44,6 +44,7 @@ const Login = (props) => {
             name="user_id"
             value={state.user_id}
             onChange={onChange}
+            onSubmit={onClick}
             placeholder="아이디를 입력해주세요"
           />
         </Grid>
@@ -57,6 +58,7 @@ const Login = (props) => {
             type="password"
             value={state.user_pw}
             onChange={onChange}
+            onSubmit={onClick}
             placeholder="비밀번호를 입력해주세요"
           />
         </Grid>

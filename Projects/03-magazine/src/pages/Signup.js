@@ -69,6 +69,7 @@ const Signup = (props) => {
           name="user_id"
           value={state.user_id}
           onChange={onChange}
+          onSubmit={onClick}
           placeholder="이메일 주소를 입력해주세요."
         />
       </Grid>
@@ -82,6 +83,7 @@ const Signup = (props) => {
           type="password"
           value={state.user_pw}
           onChange={onChange}
+          onSubmit={onClick}
           placeholder="비밀번호를 입력해주세요"
         />
       </Grid>
@@ -95,6 +97,7 @@ const Signup = (props) => {
           type="password"
           value={state.user_pwCheck}
           onChange={onChange}
+          onSubmit={onClick}
           placeholder="비밀번호를 한번 더 입력해주세요"
         />
       </Grid>
@@ -107,6 +110,7 @@ const Signup = (props) => {
           name="user_name"
           value={state.user_name}
           onChange={onChange}
+          onSubmit={onClick}
           placeholder="이름을 입력해주세요"
         />
       </Grid>

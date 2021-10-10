@@ -75,6 +75,7 @@ const MagazineWrite = (props) => {
           padding="10px"
           placeholder="제목을 입력해주세요"
           onChange={onChange}
+          onSubmit={onClick}
           value={state.title}
         />
       </Grid>
@@ -83,6 +84,11 @@ const MagazineWrite = (props) => {
           name="contents"
           rows="7"
           onChange={onChange}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              onClick(e);
+            }
+          }}
           value={state.contents}
           placeholder="내용을 입력해주세요"
         >

@@ -36,7 +36,11 @@ const Input = (props) => {
         value={value}
         placeholder={placeholder}
         onChange={onChange}
-        onSubmit={onSubmit}
+        onKeyPress={(e) => {
+          if (e.key === "Enter") {
+            onSubmit(e);
+          }
+        }}
       />
     </>
   );
