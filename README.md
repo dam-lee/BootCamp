@@ -1,4 +1,4 @@
-# BootCamp
+# Front-end web developer
 
-부트 캠프에 참여하면서 WIL 회고와 공부 내용등을 정리하는 레포입니다.
+WIL 회고와 공부 내용등을 정리하는 레포입니다.
 
