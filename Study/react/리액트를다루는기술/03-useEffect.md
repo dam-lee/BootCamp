@@ -149,3 +149,24 @@ function Counter() {
 
 ## 3. 모든 랜더링은 고유의 이펙트를 가진다
 * effect가 최신의 state 상태를 읽을 수 있는 것은 변하지 않는 effect안에서 state변수가 임의로 변경되는 것이 아니라, effect 함수 자체가 매 랜더링마다 별도로 존재하기 때문이다.
+```javascript
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    setTimeout(() => {
+      console.log(`You clicked ${count} times`);
+    }, 3000);
+  });
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+```
+* 로그는 순서대로 0,1,2,3,4,5가 출력된다.
+* 클래스 컴포넌트로 만들 경우 순서대로 출력되지 않는다.
