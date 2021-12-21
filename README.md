@@ -1,7 +1,7 @@
 # Front-end web developer
 
-## Javascript 공부 내용
+## Javascript 공부 내용 정리
 * <a href="https://github.com/dam-lee/Front-end-developer/tree/main/Study/javascript">Javascript</a>
 
-## React 공부 내용
+## React 공부 내용 정리
 * <a href="https://github.com/dam-lee/Front-end-developer/tree/main/Study/react">React</a>
