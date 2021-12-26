@@ -8,8 +8,10 @@
 
 
 ## React 공부 내용 정리
-* <a href="https://github.com/dam-lee/Front-end-developer/tree/main/Study/react">React</a>
+* <a href="https://github.com/dam-lee/Front-end-developer/blob/main/Study/react/%EB%A6%AC%EC%95%A1%ED%8A%B8%EB%A5%BC%EB%8B%A4%EB%A3%A8%EB%8A%94%EA%B8%B0%EC%88%A0/01-Hooks.md">01. Hooks</a>
+* <a href="https://github.com/dam-lee/Front-end-developer/blob/main/Study/react/%EB%A6%AC%EC%95%A1%ED%8A%B8%EB%A5%BC%EB%8B%A4%EB%A3%A8%EB%8A%94%EA%B8%B0%EC%88%A0/02-%EC%BB%A4%EC%8A%A4%ED%85%80Hooks.md">02. 커스텀 훅</a>
+* <a href="https://github.com/dam-lee/Front-end-developer/blob/main/Study/react/%EB%A6%AC%EC%95%A1%ED%8A%B8%EB%A5%BC%EB%8B%A4%EB%A3%A8%EB%8A%94%EA%B8%B0%EC%88%A0/03-useEffect.md">03. useEffect</a>
 
 ## 알고리즘 
-* <a href="https://github.com/dam-lee/Front-end-developer/tree/main/Study/algorithm">알고리즘</a>
+* <a href="https://github.com/dam-lee/Front-end-developer/tree/main/Study/algorithm">알고리즘 </a>
 
