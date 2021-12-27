@@ -168,5 +168,54 @@ function Counter() {
   );
 }
 ```
-* 로그는 순서대로 0,1,2,3,4,5가 출력된다.
-* 클래스 컴포넌트로 만들 경우 순서대로 출력되지 않는다.
+* 즉 각각의 effect는 매번 렌더링에 속한 count값을 보는 것이다.
+```javascript
+// 최초 랜더링 시
+function Counter() {
+  // ...
+  useEffect(
+    // 첫 번째 랜더링의 이펙트 함수
+    () => {
+      document.title = `You clicked ${0} times`;
+    }
+  );
+  // ...
+}
+
+// 클릭하면 함수가 다시 호출된다
+function Counter() {
+  // ...
+  useEffect(
+    // 두 번째 랜더링의 이펙트 함수
+    () => {
+      document.title = `You clicked ${1} times`;
+    }
+  );
+  // ...
+}
+
+// 또 한번 클릭하면, 다시 함수가 호출된다
+function Counter() {
+  // ...
+  useEffect(
+    // 세 번째 랜더링의 이펙트 함수
+    () => {
+      document.title = `You clicked ${2} times`;
+    }
+  );
+  // ..
+}
+```
+* 리액트는 effect 함수를 기억해 뒀다가 **DOM의 변화를 처리하고 브라우저가 그리고 난 뒤 실행**한다.
+* **사실 effect는 매 랜더링마다 다른 함수라는 뜻**
+* 개념적으로 effect는 랜더링 결과의 일부라고 생각할 수 있다.
+
+### 코드 실행 과정
+1. 리액트는 state가 0일때의 ui를 보여준다.
+2. 컴포넌트가 랜더링 결과물인 `<p>You clicked 0 times</p>` 를 그린다.
+3. 컴포넌트는 effect를 실행한다. `() => { document.title = 'You clicked 0 times' }`
+4. 리액트는 ui를 업데이트 하기 위해 dom에 변경된 값을 그린다.
+5. 버튼을 클릭하면, 컴포넌트는 리액트에게 상태값을 1로 변경해달라고 요청한다.
+6. 리액트는 상태가 1일때의 ui를 그린다.
+7. 그리고 effect의 값을 다시 실행한다
+
