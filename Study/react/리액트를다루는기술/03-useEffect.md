@@ -219,3 +219,24 @@ function Counter() {
 6. 리액트는 상태가 1일때의 ui를 그린다.
 7. 그리고 effect의 값을 다시 실행한다
 
+## 4. 모든 랜더링은 고유의 ... 모든 것을 가지고 있다.
+```javascript
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    setTimeout(() => {
+      console.log(`You clicked ${count} times`);
+    }, 3000);
+  });
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+```
+* 위의 코드를 뜸을 들이며 여러번 클릭할 경우, 로그는 순서대로 출력된다. 각각의 타이머는 특정 렌더링에 속하기 때문에 **그 시점의 count 값을 가지기 때문이다.**
+* 클래스형 컴포넌트의 경우 
