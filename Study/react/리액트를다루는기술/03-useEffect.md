@@ -268,3 +268,20 @@ function Example(props) {
 }
 ```
 * **props나 state를 컴포넌트 안에서 일찍 읽어 들였는지 아닌지는 상관이 없다!**
+* effect 안에서 정의해둔 콜백에서 사전에 잡아둔 값이 아닌 **최신의 값을 이용하고 싶을 때 쉬운 방법으로는 `ref`를 이용하는 방법이 있다.** 
+* 과거의 랜더링 시점에서 미래의 `props 나 state` 를 조회할때 주의해야 하는 점은 **흐름을 거슬러 올라가는 일**이다.
+```javascript
+function Example() {
+  const [count, setCount] = useState(0);
+  const latestCount = useRef(count); // 1.
+  useEffect(() => {
+    // 변경 가능한 값을 최신으로 설정한다
+    latestCount.current = count; // 2
+    setTimeout(() => {
+      // 변경 가능한 최신의 값을 읽어 들인다
+      console.log(`You clicked ${latestCount.current} times`); // 3
+    }, 3000);
+  });
+```
+* 미리 잡아둔 props 및 state와는 달리 특정 콜백에서 latestCount.current 의 값을 읽어 들일 때 언제나 같은 값을 보장하지 않는다.
+* 정의된 바에 따라서 이 값은 언제나 변경될 수 있다는 점을 주의해야한다.
