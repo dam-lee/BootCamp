@@ -289,6 +289,7 @@ function Example() {
 ## 6. 클린업(cleanup)
 * effect의 클린업의 목적은 구독과 같은 이펙트를 **되돌리는** 것이다.
 ```javascript
+// 첫번째 렌더링에서 `prop 이 {id: 10}`이고, 두번째 렌더링에서 `{id: 20}`이라고 할 경우.
 useEffect(() => {
   ChatAPI.subscribeToFriendStatus(props.id, handleStatusChange);
   return () => {
@@ -296,3 +297,5 @@ useEffect(() => {
   };
 });
 ```
+* 리액트는 **브라우저가 페인트 하고 난 뒤**에 effect를 실행한다.
+* **이전 effect는 새 prop과 함께 리렌더링 되고 난 뒤에 클린업된다.**
