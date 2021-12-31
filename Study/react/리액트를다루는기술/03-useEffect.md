@@ -285,3 +285,14 @@ function Example() {
 ```
 * 미리 잡아둔 props 및 state와는 달리 특정 콜백에서 latestCount.current 의 값을 읽어 들일 때 언제나 같은 값을 보장하지 않는다.
 * 정의된 바에 따라서 이 값은 언제나 변경될 수 있다는 점을 주의해야한다.
+
+## 6. 클린업(cleanup)
+* effect의 클린업의 목적은 구독과 같은 이펙트를 **되돌리는** 것이다.
+```javascript
+useEffect(() => {
+  ChatAPI.subscribeToFriendStatus(props.id, handleStatusChange);
+  return () => {
+    ChatAPI.unsubscribeFromFriendStatus(props.id, handleStatusChange);
+  };
+});
+```
