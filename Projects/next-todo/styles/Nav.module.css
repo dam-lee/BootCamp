@@ -1,0 +1,14 @@
+.nav {
+  padding: 0.5rem 1rem;
+  background-color: black;
+}
+.nav ul {
+  display: flex;
+  padding: 0;
+}
+.nav li {
+  padding: 0.5rem;
+  margin-right: 2rem;
+  color: #fff;
+  cursor: pointer;
+}

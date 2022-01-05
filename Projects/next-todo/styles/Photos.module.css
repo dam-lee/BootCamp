@@ -1,0 +1,11 @@
+.photos {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.photos li {
+  width: 50%;
+  height: 200px;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+}
